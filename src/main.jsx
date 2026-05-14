@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { createRoot } from 'react-dom/client'
 
-// âââ THEME âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── THEME ───────────────────────────────────────────────────────────────────
 const m = {
   bg:"#FFFFFF", bgS:"#F7F6F3", bgM:"#EEEDE9", bd:"#E2E0D9", bdM:"#D0CEC6",
   tx:"#1A1917", txS:"#57534E", txM:"#A8A29E", txH:"#C4BFB8"
@@ -17,7 +17,7 @@ const D = {
   pink:{l:"#FBEAF0",m:"#D4537E",d:"#72243E",b:"#EE97B4"}
 }
 
-// âââ SIMPLE TEXT RENDERER ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── SIMPLE TEXT RENDERER ────────────────────────────────────────────────────
 function Txt({t,s}){
   if(!t) return null
   const parts = t.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g)
@@ -48,7 +48,7 @@ function StatBar({label,value}){
   </div>
 }
 
-// âââ BLOCK RENDERERS âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── BLOCK RENDERERS ─────────────────────────────────────────────────────────
 const Lead = ({text}) => <p style={{fontSize:15,lineHeight:1.8,color:m.tx,margin:'0 0 18px',paddingBottom:16,borderBottom:`1px solid ${m.bd}`}}><Txt t={text}/></p>
 const Para = ({text}) => <p style={{fontSize:14,lineHeight:1.75,color:m.txS,margin:'0 0 12px'}}><Txt t={text}/></p>
 const H2 = ({text}) => <h3 style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.1em',margin:'20px 0 10px',padding:0}}>{text}</h3>
@@ -61,17 +61,17 @@ const Callout = ({color,text}) => {
 }
 const Quote = ({text,author}) => <div style={{background:m.bgS,borderRadius:10,border:`1px solid ${m.bd}`,padding:'14px 18px',marginBottom:14}}>
   <p style={{fontSize:13.5,lineHeight:1.75,color:m.txS,fontStyle:'italic',margin:'0 0 8px'}}>"{text}"</p>
-  {author&&<div style={{fontSize:11,color:m.txM,textAlign:'right'}}>â {author}</div>}
+  {author&&<div style={{fontSize:11,color:m.txM,textAlign:'right'}}>— {author}</div>}
 </div>
 const Mechanic = ({title,icon,text,chain}) => <div style={{display:'flex',gap:12,marginBottom:14}}>
-  <span style={{fontSize:13,width:18,flexShrink:0,color:m.txM,paddingTop:2}}>{icon||'â'}</span>
+  <span style={{fontSize:13,width:18,flexShrink:0,color:m.txM,paddingTop:2}}>{icon||'◈'}</span>
   <div style={{flex:1}}>
     <div style={{fontSize:13,fontWeight:600,color:m.tx,marginBottom:3}}>{title}</div>
     <p style={{fontSize:13.5,lineHeight:1.65,color:m.txS,margin:0}}><Txt t={text}/></p>
     {chain&&<div style={{display:'flex',alignItems:'center',gap:4,flexWrap:'wrap',marginTop:9}}>
       {chain.map((s,i)=><span key={i} style={{display:'flex',alignItems:'center',gap:4}}>
         <span style={{fontSize:11,padding:'2px 9px',borderRadius:99,background:m.bgM,border:`1px solid ${m.bd}`,color:m.txS}}>{s}</span>
-        {i<chain.length-1&&<span style={{fontSize:9,color:m.txH}}>â</span>}
+        {i<chain.length-1&&<span style={{fontSize:9,color:m.txH}}>→</span>}
       </span>)}
     </div>}
   </div>
@@ -147,11 +147,11 @@ function StarterBlock({data}){
       <p style={{fontSize:13.5,lineHeight:1.65,color:m.txS,margin:0}}><Txt t={data.desc}/></p>
     </div>
     <div style={{display:'flex',background:m.bgS,borderBottom:`1px solid ${m.bd}`}}>
-      {['stats','capacitÃ©','talent'].map(t=><button key={t} onClick={()=>setTab(t)} style={{flex:1,padding:'8px 0',fontSize:11.5,fontWeight:tab===t?600:400,color:tab===t?c.d:m.txM,background:tab===t?m.bg:'transparent',border:'none',borderBottom:tab===t?`2px solid ${c.m}`:'2px solid transparent',cursor:'pointer',textTransform:'capitalize'}}>{t}</button>)}
+      {['stats','capacité','talent'].map(t=><button key={t} onClick={()=>setTab(t)} style={{flex:1,padding:'8px 0',fontSize:11.5,fontWeight:tab===t?600:400,color:tab===t?c.d:m.txM,background:tab===t?m.bg:'transparent',border:'none',borderBottom:tab===t?`2px solid ${c.m}`:'2px solid transparent',cursor:'pointer',textTransform:'capitalize'}}>{t}</button>)}
     </div>
     <div style={{padding:'14px 18px',background:m.bg}}>
       {tab==='stats'&&Object.entries(data.stats).map(([k,v])=><StatBar key={k} label={k} value={v}/>)}
-      {tab==='capacitÃ©'&&<div>
+      {tab==='capacité'&&<div>
         <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:9,gap:8,flexWrap:'wrap'}}>
           <div style={{fontSize:13,fontWeight:600,color:m.tx}}>Signature : {data.signature.name}</div>
           <div style={{display:'flex',gap:4}}>
@@ -159,7 +159,7 @@ function StarterBlock({data}){
           </div>
         </div>
         <p style={{fontSize:13.5,lineHeight:1.6,color:m.txS,marginBottom:12}}>{data.signature.desc}</p>
-        <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.07em',marginBottom:9}}>Autres capacitÃ©s</div>
+        <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.07em',marginBottom:9}}>Autres capacités</div>
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:7}}>
           {data.moves.map((mv,i)=>{
             const mc=D[mv.type]||D.gray
@@ -170,8 +170,8 @@ function StarterBlock({data}){
               <div style={{flex:1,minWidth:0}}>
                 <div style={{fontSize:12,fontWeight:600,color:m.tx,marginBottom:2,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{mv.name}</div>
                 <div style={{display:'flex',gap:6,fontSize:10,color:m.txM}}>
-                  <span>{mv.pwr!=null?mv.pwr:'â'}</span><span style={{color:m.txH}}>Â·</span>
-                  <span>{mv.acc!=null?`${mv.acc}%`:'â%'}</span><span style={{color:m.txH}}>Â·</span>
+                  <span>{mv.pwr!=null?mv.pwr:'—'}</span><span style={{color:m.txH}}>·</span>
+                  <span>{mv.acc!=null?`${mv.acc}%`:'—%'}</span><span style={{color:m.txH}}>·</span>
                   <span>{mv.pp} PP</span>
                 </div>
               </div>
@@ -180,7 +180,7 @@ function StarterBlock({data}){
         </div>
       </div>}
       {tab==='talent'&&<div>
-        <div style={{fontSize:13,fontWeight:600,color:m.tx,marginBottom:5}}>Talent cachÃ© : {data.talent.name}</div>
+        <div style={{fontSize:13,fontWeight:600,color:m.tx,marginBottom:5}}>Talent caché : {data.talent.name}</div>
         <p style={{fontSize:13.5,lineHeight:1.6,color:m.txS,margin:0}}>{data.talent.desc}</p>
       </div>}
     </div>
@@ -217,7 +217,7 @@ function PersonCard({person}){
       {person.arc&&<div style={{marginTop:12,paddingTop:12,borderTop:`1px solid ${m.bd}`}}>
         <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:6}}>Arc narratif</div>
         <p style={{fontSize:13,lineHeight:1.6,color:m.txS,margin:0}}>{person.arc}</p>
-        {person.trigger&&<div style={{marginTop:8,fontSize:11,color:c.m,display:'flex',gap:5,alignItems:'center'}}><span style={{fontSize:9}}>â</span>{person.trigger}</div>}
+        {person.trigger&&<div style={{marginTop:8,fontSize:11,color:c.m,display:'flex',gap:5,alignItems:'center'}}><span style={{fontSize:9}}>◆</span>{person.trigger}</div>}
       </div>}
     </div>
   </div>
@@ -229,12 +229,12 @@ function EclatTable({expediteurs}){
   const recover=expediteurs.filter(e=>e.status==='recover')
   return <div>
     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:7,marginBottom:16}}>
-      {[{label:'Ãclats sÃ©curisÃ©s',value:'4',c:'green'},{label:'Ã rÃ©cupÃ©rer',value:'8',c:'amber'}].map((it,i)=><div key={i} style={{background:m.bgS,border:`1px solid ${m.bd}`,borderRadius:8,padding:'9px 13px'}}>
+      {[{label:'Éclats sécurisés',value:'4',c:'green'},{label:'À récupérer',value:'8',c:'amber'}].map((it,i)=><div key={i} style={{background:m.bgS,border:`1px solid ${m.bd}`,borderRadius:8,padding:'9px 13px'}}>
         <div style={{fontSize:10,color:m.txM,textTransform:'uppercase',letterSpacing:'0.07em',marginBottom:3}}>{it.label}</div>
         <div style={{fontSize:24,fontWeight:700,color:D[it.c].m}}>{it.value}</div>
       </div>)}
     </div>
-    <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:6}}>SÃ©curisÃ©s au dÃ©part</div>
+    <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:6}}>Sécurisés au départ</div>
     {secure.map((e,i)=>{
       const c=D[e.color]||D.gray
       return <div key={i} style={{display:'flex',alignItems:'center',gap:9,padding:'8px 12px',background:m.bgS,border:`1px solid ${m.bd}`,borderRadius:8,marginBottom:5}}>
@@ -244,11 +244,11 @@ function EclatTable({expediteurs}){
           <div style={{fontSize:13,fontWeight:600,color:m.tx}}>{e.name}</div>
           <div style={{fontSize:11,color:m.txM}}>{e.role}</div>
         </div>
-        <span style={{fontSize:10,padding:'2px 8px',borderRadius:99,background:D.green.l,color:D.green.d,border:`1px solid ${D.green.b}`}}>SÃ©curisÃ©</span>
+        <span style={{fontSize:10,padding:'2px 8px',borderRadius:99,background:D.green.l,color:D.green.d,border:`1px solid ${D.green.b}`}}>Sécurisé</span>
       </div>
     })}
     <div style={{height:14}}/>
-    <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:6}}>Ã rÃ©cupÃ©rer dans la PangÃ©e</div>
+    <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:6}}>À récupérer dans la Pangée</div>
     {recover.map((e,i)=>{
       const isOpen=open===i, c=D[e.color]||D.gray
       return <div key={i} style={{marginBottom:5,border:`1px solid ${m.bd}`,borderRadius:8,overflow:'hidden'}}>
@@ -260,12 +260,12 @@ function EclatTable({expediteurs}){
             <div style={{fontSize:11,color:m.txM}}>{e.role}</div>
           </div>
           {e.type&&<Tag color={e.color} label={e.type} sm/>}
-          <span style={{fontSize:10,padding:'2px 8px',borderRadius:99,background:D.amber.l,color:D.amber.d,border:`1px solid ${D.amber.b}`,flexShrink:0}}>Ã rÃ©cupÃ©rer</span>
-          <span style={{fontSize:11,color:m.txM,marginLeft:2,flexShrink:0}}>{isOpen?'â':'â'}</span>
+          <span style={{fontSize:10,padding:'2px 8px',borderRadius:99,background:D.amber.l,color:D.amber.d,border:`1px solid ${D.amber.b}`,flexShrink:0}}>À récupérer</span>
+          <span style={{fontSize:11,color:m.txM,marginLeft:2,flexShrink:0}}>{isOpen?'↑':'↓'}</span>
         </button>
         {isOpen&&<div style={{padding:'10px 12px 12px 49px',background:m.bg,borderTop:`1px solid ${m.bd}`}}>
           <p style={{fontSize:13,lineHeight:1.6,color:m.txS,margin:'0 0 7px'}}>{e.arc}</p>
-          {e.trigger&&<div style={{fontSize:11,color:c.m,display:'flex',gap:5,alignItems:'center'}}><span style={{fontSize:9}}>â</span>{e.trigger}</div>}
+          {e.trigger&&<div style={{fontSize:11,color:c.m,display:'flex',gap:5,alignItems:'center'}}><span style={{fontSize:9}}>◆</span>{e.trigger}</div>}
         </div>}
       </div>
     })}
@@ -295,7 +295,7 @@ function TypeGrid({items}){
   </div>
 }
 
-// âââ BLOCK DISPATCHER ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── BLOCK DISPATCHER ────────────────────────────────────────────────────────
 function renderBlock(block, i, data){
   switch(block.type){
     case 'lead': return <Lead key={i} text={block.text}/>
@@ -320,7 +320,7 @@ function renderBlock(block, i, data){
   }
 }
 
-// âââ MAIN APP âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── MAIN APP ─────────────────────────────────────────────────────────────────
 function App(){
   const [data, setData] = useState(null)
   const [sectionId, setSectionId] = useState('monde')
@@ -348,7 +348,7 @@ function App(){
 
   useEffect(()=>{ if(mainRef.current) mainRef.current.scrollTop=0 },[sectionId])
 
-  if(loading) return <div style={{position:'fixed',inset:0,display:'flex',alignItems:'center',justifyContent:'center',background:m.bg}}><div style={{fontSize:13,color:m.txM}}>Chargementâ¦</div></div>
+  if(loading) return <div style={{position:'fixed',inset:0,display:'flex',alignItems:'center',justifyContent:'center',background:m.bg}}><div style={{fontSize:13,color:m.txM}}>Chargement…</div></div>
 
   const groups=[...new Set(data.sections.map(s=>s.group))]
   const section=data.sections.find(s=>s.id===sectionId)||data.sections[0]
@@ -373,8 +373,8 @@ function App(){
   const Content=()=><>
     {section.content.map((b,i)=>renderBlock(b,i,data))}
     <div style={{marginTop:28,paddingTop:14,borderTop:`1px solid ${m.bd}`,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-      {prev?<button onClick={()=>setSectionId(prev.id)} style={{display:'flex',alignItems:'center',gap:6,background:m.bgS,border:`1px solid ${m.bd}`,borderRadius:8,cursor:'pointer',color:m.txS,fontSize:12,padding:'7px 12px'}}>â {prev.label}</button>:<div/>}
-      {next?<button onClick={()=>setSectionId(next.id)} style={{display:'flex',alignItems:'center',gap:6,background:m.bgS,border:`1px solid ${m.bd}`,borderRadius:8,cursor:'pointer',color:m.txS,fontSize:12,padding:'7px 12px'}}>{next.label} â</button>:<div/>}
+      {prev?<button onClick={()=>setSectionId(prev.id)} style={{display:'flex',alignItems:'center',gap:6,background:m.bgS,border:`1px solid ${m.bd}`,borderRadius:8,cursor:'pointer',color:m.txS,fontSize:12,padding:'7px 12px'}}>← {prev.label}</button>:<div/>}
+      {next?<button onClick={()=>setSectionId(next.id)} style={{display:'flex',alignItems:'center',gap:6,background:m.bgS,border:`1px solid ${m.bd}`,borderRadius:8,cursor:'pointer',color:m.txS,fontSize:12,padding:'7px 12px'}}>{next.label} →</button>:<div/>}
     </div>
   </>
 
@@ -384,19 +384,19 @@ function App(){
       <div style={{position:'absolute',top:0,left:0,bottom:0,width:'80%',maxWidth:280,background:m.bg,borderRight:`1px solid ${m.bd}`,display:'flex',flexDirection:'column'}} onClick={e=>e.stopPropagation()}>
         <div style={{padding:'14px 16px 10px',borderBottom:`1px solid ${m.bd}`,display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0}}>
           <div>
-            <div style={{fontSize:12,fontWeight:700,color:m.tx}}>PokÃ©mon Legends Â· PangÃ©e</div>
-            <div style={{fontSize:10,color:m.txM,marginTop:1}}>EncyclopÃ©die de conception</div>
+            <div style={{fontSize:12,fontWeight:700,color:m.tx}}>Pokémon Legends · Pangée</div>
+            <div style={{fontSize:10,color:m.txM,marginTop:1}}>Encyclopédie de conception</div>
           </div>
-          <button onClick={()=>setMenuOpen(false)} style={{background:m.bgS,border:`1px solid ${m.bd}`,borderRadius:6,fontSize:13,cursor:'pointer',color:m.txS,padding:'3px 8px',lineHeight:1.4}}>â</button>
+          <button onClick={()=>setMenuOpen(false)} style={{background:m.bgS,border:`1px solid ${m.bd}`,borderRadius:6,fontSize:13,cursor:'pointer',color:m.txS,padding:'3px 8px',lineHeight:1.4}}>✕</button>
         </div>
         <Nav/>
       </div>
     </div>}
     <div style={{display:'flex',alignItems:'center',gap:10,padding:'10px 14px',borderBottom:`1px solid ${m.bd}`,background:m.bgS,flexShrink:0}}>
-      <button onClick={()=>setMenuOpen(true)} style={{background:m.bg,border:`1px solid ${m.bd}`,borderRadius:7,padding:'6px 10px',cursor:'pointer',fontSize:15,lineHeight:1,color:m.tx,flexShrink:0}}>â°</button>
+      <button onClick={()=>setMenuOpen(true)} style={{background:m.bg,border:`1px solid ${m.bd}`,borderRadius:7,padding:'6px 10px',cursor:'pointer',fontSize:15,lineHeight:1,color:m.tx,flexShrink:0}}>☰</button>
       <div style={{flex:1,minWidth:0}}>
         <div style={{fontSize:12,fontWeight:600,color:m.tx,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{section.title}</div>
-        <div style={{fontSize:10,color:m.txM}}>{section.group} Â· {section.label}</div>
+        <div style={{fontSize:10,color:m.txM}}>{section.group} · {section.label}</div>
       </div>
       <span style={{fontSize:10,padding:'2px 8px',borderRadius:99,background:sc.l,color:sc.d,border:`1px solid ${sc.b}`,fontWeight:600,flexShrink:0}}>{section.badge}</span>
     </div>
@@ -405,19 +405,19 @@ function App(){
     </div>}
     <div ref={mainRef} style={{flex:1,overflowY:'auto',padding:'16px 14px 24px'}}><Content/></div>
     <div style={{padding:'10px 14px',borderTop:`1px solid ${m.bd}`,background:m.bgS,flexShrink:0}}>
-      <div style={{fontSize:10,color:m.txM,textAlign:'center'}}>{data.meta.version} Â· {data.meta.lastUpdated}</div>
+      <div style={{fontSize:10,color:m.txM,textAlign:'center'}}>{data.meta.version} · {data.meta.lastUpdated}</div>
     </div>
   </div>
 
   return <div style={{position:'fixed',inset:0,display:'flex',fontFamily:'system-ui,-apple-system,sans-serif',color:m.tx,background:m.bg}}>
     <div style={{width:200,flexShrink:0,borderRight:`1px solid ${m.bd}`,background:m.bgS,display:'flex',flexDirection:'column',height:'100%'}}>
       <div style={{padding:'16px 14px 12px',borderBottom:`1px solid ${m.bd}`,flexShrink:0}}>
-        <div style={{fontSize:12,fontWeight:700,color:m.tx,lineHeight:1.3}}>PokÃ©mon Legends</div>
-        <div style={{fontSize:10,color:m.txM,marginTop:2}}>PangÃ©e Â· EncyclopÃ©die</div>
+        <div style={{fontSize:12,fontWeight:700,color:m.tx,lineHeight:1.3}}>Pokémon Legends</div>
+        <div style={{fontSize:10,color:m.txM,marginTop:2}}>Pangée · Encyclopédie</div>
       </div>
       <Nav/>
       <div style={{padding:'10px 10px 14px',borderTop:`1px solid ${m.bd}`,flexShrink:0}}>
-        <span style={{fontSize:9.5,color:m.txM}}>{data.meta.version} Â· {data.meta.lastUpdated}</span>
+        <span style={{fontSize:9.5,color:m.txM}}>{data.meta.version} · {data.meta.lastUpdated}</span>
       </div>
     </div>
     <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden',minWidth:0,height:'100%'}}>
@@ -438,121 +438,121 @@ function App(){
   </div>
 }
 
-// âââ DATA ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── DATA ────────────────────────────────────────────────────────────────────
 const DEFAULT_DATA = {
-  meta:{title:"PokÃ©mon Legends : PangÃ©e",subtitle:"EncyclopÃ©die de conception",version:"v3.0",lastUpdated:new Date().toISOString().split('T')[0]},
+  meta:{title:"Pokémon Legends : Pangée",subtitle:"Encyclopédie de conception",version:"v3.0",lastUpdated:new Date().toISOString().split('T')[0]},
   sections:[
-    {id:"monde",label:"La RÃ©gion",group:"Univers",color:"amber",badge:"Cadre temporel",badgeColor:"amber",title:"PangÃ©e & Panthalassa",meta:"Plusieurs centaines de millions d'annÃ©es avant notre Ã¨re",summary:"Le continent unique et l'ocÃ©an primordial â cadre gÃ©ographique et temporel du jeu.",content:[
-      {type:"lead",text:"Il y a des centaines de millions d'annÃ©es, existait **un seul continent** et **un seul ocÃ©an**. La PangÃ©e â terre primordiale brute et hostile â et Panthalassa, l'ocÃ©an infini qui l'enveloppait de toutes parts."},
-      {type:"para",text:"Ce n'Ã©tait pas un monde accueillant. Les volcans redessinaient les cÃ´tes jour aprÃ¨s jour. Les tempÃªtes de Panthalassa duraient des annÃ©es entiÃ¨res. La frontiÃ¨re entre la terre et la mer n'Ã©tait pas une ligne â c'Ã©tait une *zone de tension permanente entre deux forces qui refusaient de coexister*."},
-      {type:"para",text:"C'est dans ce chaos que la vie a trouvÃ© son chemin. Et c'est dans ce chaos qu'une chose venue de beaucoup plus loin que la mer ou la montagne s'est Ã©crasÃ©e sur la planÃ¨te pour la premiÃ¨re fois."},
+    {id:"monde",label:"La Région",group:"Univers",color:"amber",badge:"Cadre temporel",badgeColor:"amber",title:"Pangée & Panthalassa",meta:"Plusieurs centaines de millions d'années avant notre ère",summary:"Le continent unique et l'océan primordial — cadre géographique et temporel du jeu.",content:[
+      {type:"lead",text:"Il y a des centaines de millions d'années, existait **un seul continent** et **un seul océan**. La Pangée — terre primordiale brute et hostile — et Panthalassa, l'océan infini qui l'enveloppait de toutes parts."},
+      {type:"para",text:"Ce n'était pas un monde accueillant. Les volcans redessinaient les côtes jour après jour. Les tempêtes de Panthalassa duraient des années entières. La frontière entre la terre et la mer n'était pas une ligne — c'était une *zone de tension permanente entre deux forces qui refusaient de coexister*."},
+      {type:"para",text:"C'est dans ce chaos que la vie a trouvé son chemin. Et c'est dans ce chaos qu'une chose venue de beaucoup plus loin que la mer ou la montagne s'est écrasée sur la planète pour la première fois."},
       {type:"divider"},
-      {type:"h2",text:"CaractÃ©ristiques du monde"},
-      {type:"cards3",items:[{name:"PangÃ©e",icon:"ð",sub:"Le continent unique",desc:"Terre brute, volcanique, en formation permanente. Chaque Ã©ruption redessine ses contours. Groudon en est l'Ã¢me consciente."},{name:"Panthalassa",icon:"ð",sub:"L'ocÃ©an infini",desc:"Vaste et insondable. Ses abysses abritent des formes de vie que la lumiÃ¨re n'a jamais atteintes. Kyogre en est l'expression vivante."},{name:"StratosphÃ¨re",icon:"â¡",sub:"L'espace entre les deux",desc:"Territoire de Rayquaza, arbitre des deux forces. Il est le premier Ã  dÃ©tecter les anomalies venues du cosmos."}]},
+      {type:"h2",text:"Caractéristiques du monde"},
+      {type:"cards3",items:[{name:"Pangée",icon:"🌋",sub:"Le continent unique",desc:"Terre brute, volcanique, en formation permanente. Chaque éruption redessine ses contours. Groudon en est l'âme consciente."},{name:"Panthalassa",icon:"🌊",sub:"L'océan infini",desc:"Vaste et insondable. Ses abysses abritent des formes de vie que la lumière n'a jamais atteintes. Kyogre en est l'expression vivante."},{name:"Stratosphère",icon:"⚡",sub:"L'espace entre les deux",desc:"Territoire de Rayquaza, arbitre des deux forces. Il est le premier à détecter les anomalies venues du cosmos."}]},
       {type:"divider"},
       {type:"h2",text:"La tension fondamentale"},
-      {type:"callout",color:"amber",text:"L'opposition entre Groudon et Kyogre n'est pas une guerre. C'est une tension fondamentale qui *dÃ©finit la planÃ¨te*. Depuis des Ã©ons, un Ã©quilibre prÃ©caire â hostile mais stable â maintient la vie possible. Le jeu commence au moment oÃ¹ cet Ã©quilibre est rompu par l'arrivÃ©e de Deoxys."}
+      {type:"callout",color:"amber",text:"L'opposition entre Groudon et Kyogre n'est pas une guerre. C'est une tension fondamentale qui *définit la planète*. Depuis des éons, un équilibre précaire — hostile mais stable — maintient la vie possible. Le jeu commence au moment où cet équilibre est rompu par l'arrivée de Deoxys."}
     ]},
-    {id:"cosmogonie",label:"LÃ©gendaires & Fabuleux",group:"Univers",color:"coral",badge:"LÃ©gendaires",badgeColor:"coral",title:"LÃ©gendaires & Fabuleux",meta:"LÃ©gendaires fondateurs Â· Le cycle Ã©ternel et ce qui le brise",summary:"Groudon, Kyogre, Rayquaza, Deoxys, Arceus, Regigigas â les six entitÃ©s qui dÃ©finissent et transforment le monde primordial.",content:[
-      {type:"lead",text:"Six entitÃ©s structurent l'Ã©quilibre du monde. Trois sont nÃ©es de la planÃ¨te. Une vient du vide interstellaire. Une observe de partout et de nulle part. Une a Ã©tÃ© agglomÃ©rÃ©e par une intention trop grande pour rester sans forme."},
-      {type:"h2",text:"Le cycle Ã©ternel â Groudon, Kyogre, Rayquaza"},
+    {id:"cosmogonie",label:"Légendaires & Fabuleux",group:"Univers",color:"coral",badge:"Légendaires",badgeColor:"coral",title:"Légendaires & Fabuleux",meta:"Légendaires fondateurs · Le cycle éternel et ce qui le brise",summary:"Groudon, Kyogre, Rayquaza, Deoxys, Arceus, Regigigas — les six entités qui définissent et transforment le monde primordial.",content:[
+      {type:"lead",text:"Six entités structurent l'équilibre du monde. Trois sont nées de la planète. Une vient du vide interstellaire. Une observe de partout et de nulle part. Une a été agglomérée par une intention trop grande pour rester sans forme."},
+      {type:"h2",text:"Le cycle éternel — Groudon, Kyogre, Rayquaza"},
       {type:"legendary-grid",items:[
-        {name:"Groudon",imgKey:"groudon",sub:"L'Ãme de la PangÃ©e",types:[["coral","Feu"],["amber","Sol"]],color:"coral",text:"Groudon n'est pas nÃ© de la PangÃ©e. Il **est** la PangÃ©e. Dans sa Forme Primo, ses flancs sont couverts de fissures de lave, ses yeux comme deux cratÃ¨res actifs. Il ne se dÃ©place pas : il est le sol lui-mÃªme qui se soulÃ¨ve. C'est un **bÃ¢tisseur inconscient** â il crÃ©e la terre non par intention, mais parce que c'est sa nature."},
-        {name:"Kyogre",imgKey:"kyogre",sub:"L'Ãme de Panthalassa",types:[["blue","Eau"]],color:"blue",text:"Kyogre est Panthalassa. Ses mouvements sont les courants ocÃ©aniques, ses humeurs sont les tempÃªtes. Dans sa Forme Primo, ses motifs lumineux projettent des aurores sous-marines visibles depuis les cÃ´tes la nuit. Il ne cherche pas Ã  dÃ©truire la terre â il cherche Ã  *l'engloutir par nature*."},
-        {name:"Mega Rayquaza",imgKey:"rayquaza",sub:"L'Arbitre des Cieux",types:[["green","Dragon"],["gray","Vol"]],color:"green",text:"Rayquaza vit dans la stratosphÃ¨re. Il appartient Ã  *l'espace entre les deux* â ni Groudon ni Kyogre. Ã cette Ã©poque, il est en forme MÃ©ga permanente. Son combat avec la mÃ©tÃ©orite a crÃ©Ã© son **mikado organ**. Pour la premiÃ¨re fois, l'arbitre est lui-mÃªme modifiÃ© par ce qu'il arbitre. Il n'est plus neutre."},
-        {name:"Deoxys â­",imgKey:"deoxys",sub:"L'Intrus Cosmique â LÃ©gendaire central",types:[["purple","Cosmique"]],color:"purple",text:"Virus interstellaire projetÃ© vers la planÃ¨te par un Ã©vÃ©nement inconnu. Il combat Rayquaza dans la stratosphÃ¨re, survit mutant, et s'Ã©crase sur la PangÃ©e. Ses quatre formes sont des Ã©tats d'adaptation Ã  un monde qu'il ne comprend pas encore. Il n'est pas mauvais â il est *radicalement Ã©tranger* Ã  tout ce qui existe ici."}
+        {name:"Groudon",imgKey:"groudon",sub:"L'Âme de la Pangée",types:[["coral","Feu"],["amber","Sol"]],color:"coral",text:"Groudon n'est pas né de la Pangée. Il **est** la Pangée. Dans sa Forme Primo, ses flancs sont couverts de fissures de lave, ses yeux comme deux cratères actifs. Il ne se déplace pas : il est le sol lui-même qui se soulève. C'est un **bâtisseur inconscient** — il crée la terre non par intention, mais parce que c'est sa nature."},
+        {name:"Kyogre",imgKey:"kyogre",sub:"L'Âme de Panthalassa",types:[["blue","Eau"]],color:"blue",text:"Kyogre est Panthalassa. Ses mouvements sont les courants océaniques, ses humeurs sont les tempêtes. Dans sa Forme Primo, ses motifs lumineux projettent des aurores sous-marines visibles depuis les côtes la nuit. Il ne cherche pas à détruire la terre — il cherche à *l'engloutir par nature*."},
+        {name:"Mega Rayquaza",imgKey:"rayquaza",sub:"L'Arbitre des Cieux",types:[["green","Dragon"],["gray","Vol"]],color:"green",text:"Rayquaza vit dans la stratosphère. Il appartient à *l'espace entre les deux* — ni Groudon ni Kyogre. À cette époque, il est en forme Méga permanente. Son combat avec la météorite a créé son **mikado organ**. Pour la première fois, l'arbitre est lui-même modifié par ce qu'il arbitre. Il n'est plus neutre."},
+        {name:"Deoxys ⭐",imgKey:"deoxys",sub:"L'Intrus Cosmique — Légendaire central",types:[["purple","Cosmique"]],color:"purple",text:"Virus interstellaire projeté vers la planète par un événement inconnu. Il combat Rayquaza dans la stratosphère, survit mutant, et s'écrase sur la Pangée. Ses quatre formes sont des états d'adaptation à un monde qu'il ne comprend pas encore. Il n'est pas mauvais — il est *radicalement étranger* à tout ce qui existe ici."}
       ]},
-      {type:"callout",color:"coral",text:"Depuis des Ã©ons, le mÃªme schÃ©ma se rÃ©pÃ¨te : la tension monte entre Groudon et Kyogre, le conflit Ã©clate en Formes Primo, Rayquaza descend et arbitre, l'Ã©quilibre revient. Arceus le sait. Il le tolÃ¨re. Il lui fait confiance. **Ce systÃ¨me est brutal mais stable â il a toujours suffi.**"},
-      {type:"mechanic",title:"Ce que Deoxys change",icon:"â­",text:"L'arrivÃ©e de Deoxys introduit trois variables simultanÃ©es qu'aucun cycle prÃ©cÃ©dent n'a connues : **Rayquaza est lui-mÃªme altÃ©rÃ©** par l'Ã©nergie X. **L'Ã©nergie X introduit une frÃ©quence** que le systÃ¨me planÃ©taire ne peut pas absorber. **La vie sur la planÃ¨te est dÃ©sormais exposÃ©e** Ã  une accumulation d'Ã©nergie potentiellement irrÃ©versible.",chain:["Tension habituelle","Conflit Formes Primo","Rayquaza arbitre","â Mais cette fois : impossible"]},
+      {type:"callout",color:"coral",text:"Depuis des éons, le même schéma se répète : la tension monte entre Groudon et Kyogre, le conflit éclate en Formes Primo, Rayquaza descend et arbitre, l'équilibre revient. Arceus le sait. Il le tolère. Il lui fait confiance. **Ce système est brutal mais stable — il a toujours suffi.**"},
+      {type:"mechanic",title:"Ce que Deoxys change",icon:"⭐",text:"L'arrivée de Deoxys introduit trois variables simultanées qu'aucun cycle précédent n'a connues : **Rayquaza est lui-même altéré** par l'énergie X. **L'énergie X introduit une fréquence** que le système planétaire ne peut pas absorber. **La vie sur la planète est désormais exposée** à une accumulation d'énergie potentiellement irréversible.",chain:["Tension habituelle","Conflit Formes Primo","Rayquaza arbitre","→ Mais cette fois : impossible"]},
       {type:"divider"},
-      {type:"h2",text:"Arceus â Le regard qui dÃ©clenche"},
+      {type:"h2",text:"Arceus — Le regard qui déclenche"},
       {type:"legendary-grid",items:[
-        {name:"Arceus",imgKey:"arceus",sub:"PrÃ©sence causale invisible â n'apparaÃ®t jamais directement",types:[["gray","Normal"]],color:"amber",text:"Arceus n'apparaÃ®t jamais directement dans les Ã©vÃ©nements du jeu. Il est une **prÃ©sence dÃ©duite, pas observÃ©e**. Depuis des Ã©ons, il fait confiance au cycle. Deoxys ne dÃ©clenche pas son intervention parce qu'il est une menace immÃ©diate â mais parce que trois variables se cumulent pour la premiÃ¨re fois et rendent tout cycle futur potentiellement irrÃ©versible. Sa rÃ©ponse : *une mise Ã  jour du systÃ¨me*."},
-        {name:"Regigigas",imgKey:"regigigas",sub:"Le Golem Cosmique â RÃ©ponse planÃ©taire",types:[["gray","Normal"]],color:"gray",text:"Regigigas n'a pas de crÃ©ateur au sens strict. Il a une **cause** (la volontÃ© d'Arceus) et un **matÃ©riau** (la PangÃ©e elle-mÃªme). Pas sculptÃ©, pas conÃ§u â **agglomÃ©rÃ©** par une intention trop grande pour rester sans forme. Sa mission : briser la PangÃ©e, tirer les masses continentales, disperser les Ãclats X dans des strates gÃ©ologiques distinctes. Puis il entre en dormance â lÃ  oÃ¹ la PangÃ©e Ã©tait la plus dense, ce qui deviendra Sinnoh."}
+        {name:"Arceus",imgKey:"arceus",sub:"Présence causale invisible — n'apparaît jamais directement",types:[["gray","Normal"]],color:"amber",text:"Arceus n'apparaît jamais directement dans les événements du jeu. Il est une **présence déduite, pas observée**. Depuis des éons, il fait confiance au cycle. Deoxys ne déclenche pas son intervention parce qu'il est une menace immédiate — mais parce que trois variables se cumulent pour la première fois et rendent tout cycle futur potentiellement irréversible. Sa réponse : *une mise à jour du système*."},
+        {name:"Regigigas",imgKey:"regigigas",sub:"Le Golem Cosmique — Réponse planétaire",types:[["gray","Normal"]],color:"gray",text:"Regigigas n'a pas de créateur au sens strict. Il a une **cause** (la volonté d'Arceus) et un **matériau** (la Pangée elle-même). Pas sculpté, pas conçu — **aggloméré** par une intention trop grande pour rester sans forme. Sa mission : briser la Pangée, tirer les masses continentales, disperser les Éclats X dans des strates géologiques distinctes. Puis il entre en dormance — là où la Pangée était la plus dense, ce qui deviendra Sinnoh."}
       ]},
       {type:"divider"},
       {type:"h2",text:"Les quatre formes de Deoxys"},
-      {type:"cards4",items:[{name:"Normale",tag:"Ãveil",desc:"L'Ã©tat d'observation. Deoxys tente de comprendre ce monde inconnu."},{name:"Attaque",tag:"RÃ©action",desc:"La rÃ©action dÃ©fensive face Ã  l'agression. Instinct de survie activÃ©."},{name:"DÃ©fense",tag:"Repli",desc:"Le repli, la survie. Deoxys se protÃ¨ge d'un monde hostile."},{name:"Vitesse",tag:"Exploration",desc:"La fuite, la cartographie. Deoxys explore ce qu'il ne comprend pas."}]},
+      {type:"cards4",items:[{name:"Normale",tag:"Éveil",desc:"L'état d'observation. Deoxys tente de comprendre ce monde inconnu."},{name:"Attaque",tag:"Réaction",desc:"La réaction défensive face à l'agression. Instinct de survie activé."},{name:"Défense",tag:"Repli",desc:"Le repli, la survie. Deoxys se protège d'un monde hostile."},{name:"Vitesse",tag:"Exploration",desc:"La fuite, la cartographie. Deoxys explore ce qu'il ne comprend pas."}]},
       {type:"divider"},
-      {type:"mechanic",title:"Slow Start â Se rÃ©veiller coÃ»te quelque chose",icon:"â",text:"Regigigas n'est pas un Ãªtre vivant au sens plein. Chaque rÃ©veil lui coÃ»te quelque chose de fondamental â comme si la matiÃ¨re devait se rappeler d'elle-mÃªme ce qu'elle est censÃ©e faire, sans avoir de mÃ©moire pour s'en souvenir. Le **Slow Start** n'est pas une faiblesse mÃ©canique. C'est la trace narrative de ce qu'il est : un golem qui doit se reconstituer Ã  chaque fois qu'une volontÃ© extÃ©rieure l'y force."}
+      {type:"mechanic",title:"Slow Start — Se réveiller coûte quelque chose",icon:"◇",text:"Regigigas n'est pas un être vivant au sens plein. Chaque réveil lui coûte quelque chose de fondamental — comme si la matière devait se rappeler d'elle-même ce qu'elle est censée faire, sans avoir de mémoire pour s'en souvenir. Le **Slow Start** n'est pas une faiblesse mécanique. C'est la trace narrative de ce qu'il est : un golem qui doit se reconstituer à chaque fois qu'une volonté extérieure l'y force."}
     ]},
-    {id:"starters",label:"Starters",group:"Univers",color:"green",badge:"Starters",badgeColor:"green",title:"Les Starters de PangÃ©e",meta:"Les trois PokÃ©mon de dÃ©part proposÃ©s par le Pr. Wollemi",summary:"Typhlosion, Serperior et Primarina dans leurs formes rÃ©gionales â nÃ©es de l'Ã©quilibre entre Groudon et Kyogre.",content:[
-      {type:"lead",text:"NÃ©es de l'Ã©quilibre fragile entre Groudon et Kyogre, ces trois formes rÃ©gionales sont les *manifestations vivantes* des conditions qui ont rendu la vie possible sur PangÃ©e."},
-      {type:"starter-block",data:{name:"Typhlosion de PangÃ©e",quote:"La Terre en fusion",color:"coral",types:[["coral","Feu"],["gray","Roche"]],desc:"NÃ© des premiÃ¨res Ã©ruptions de la PangÃ©e, sa fourrure s'est pÃ©trifiÃ©e en basalte incandescent. Ses flammes ne brÃ»lent plus vers le haut â elles *coulent vers le bas comme de la lave*. Il ne court pas : il avance comme une coulÃ©e, inÃ©vitable et implacable.",stats:{PV:98,Attaque:118,DÃ©fense:95,"Atq SpÃ©":74,"DÃ©f SpÃ©":80,Vitesse:92},totalBST:557,signature:{name:"Frappe Magma",pwr:90,acc:100,pp:10,desc:"Le lanceur s'abat sur la cible avec un poing de roche en fusion. La lave qui se solidifie Ã  l'impact rÃ©duit la Vitesse de la cible d'un cran."},talent:{name:"Corps Ardent",desc:"Les capacitÃ©s directes reÃ§ues ont 30% de chances de brÃ»ler leur lanceur."},moves:[{name:"Nitrocharge",type:"coral",pwr:50,acc:100,pp:20},{name:"Ãboulement",type:"gray",pwr:75,acc:90,pp:10},{name:"SÃ©isme",type:"amber",pwr:100,acc:100,pp:10},{name:"Gyroballe",type:"gray",pwr:null,acc:100,pp:5}]}},
-      {type:"starter-block",data:{name:"Serperior de PangÃ©e",quote:"La Nature vÃ©nÃ©rable",color:"green",types:[["green","Plante"],["blue","Dragon"]],desc:"Incarnation de la vÃ©gÃ©tation primordiale de la PangÃ©e â massive, primitive, indestructible. Ses Ã©cailles ressemblent Ã  de l'Ã©corce d'arbre millÃ©naire. Il ne combat jamais en premier. Il n'en a jamais eu besoin.",stats:{PV:75,Attaque:115,DÃ©fense:90,"Atq SpÃ©":60,"DÃ©f SpÃ©":83,Vitesse:125},totalBST:548,signature:{name:"Ãtreinte Sylvestre",pwr:100,acc:75,pp:10,desc:"Le lanceur s'enroule violemment autour de la cible et la broie dans ses Ã©cailles. EmpÃªche la cible de quitter le terrain tant que Serperior reste au combat."},talent:{name:"MultiÃ©caille",desc:"Diminue les dÃ©gÃ¢ts subis par les capacitÃ©s offensives si le PokÃ©mon a tous ses PV."},moves:[{name:"Danse Draco",type:"blue",pwr:null,acc:null,pp:20},{name:"Lame Feuille",type:"green",pwr:90,acc:100,pp:15},{name:"Rafale Ãcailles",type:"blue",pwr:25,acc:90,pp:20},{name:"Vitesse ExtrÃªme",type:"gray",pwr:80,acc:100,pp:5}]}},
-      {type:"starter-block",data:{name:"Primarina de PangÃ©e",quote:"L'Eau mystÃ©rieuse",color:"blue",types:[["blue","Eau"],["purple","Spectre"]],desc:"NÃ©e des abysses de Panthalassa, lÃ  oÃ¹ la lumiÃ¨re n'est jamais arrivÃ©e. Elle est translucide, bioluminescente par intermittence, visible seulement quand elle le dÃ©cide. Elle est la premiÃ¨re Ã  *sentir* l'arrivÃ©e de Deoxys â avant mÃªme que Rayquaza ne le dÃ©tecte.",stats:{PV:100,Attaque:60,DÃ©fense:75,"Atq SpÃ©":112,"DÃ©f SpÃ©":124,Vitesse:85},totalBST:556,signature:{name:"Mirage Abyssal",pwr:70,acc:100,pp:10,desc:"Le lanceur distord les reflets lumineux autour de lui pour frapper depuis un angle imperceptible. Inflige des dÃ©gÃ¢ts et 50% de chances de rendre la cible confuse."},talent:{name:"MÃ©dic Nature",desc:"Le PokÃ©mon soigne ses altÃ©rations de statut s'il switch ou en fin de combat."},moves:[{name:"Surf",type:"blue",pwr:90,acc:100,pp:15},{name:"Fontaine de Vie",type:"blue",pwr:null,acc:null,pp:10},{name:"ChÃ¢timent",type:"purple",pwr:65,acc:100,pp:10},{name:"Ãclat Magique",type:"pink",pwr:80,acc:100,pp:10}]}}
+    {id:"starters",label:"Starters",group:"Univers",color:"green",badge:"Starters",badgeColor:"green",title:"Les Starters de Pangée",meta:"Les trois Pokémon de départ proposés par le Pr. Wollemi",summary:"Typhlosion, Serperior et Primarina dans leurs formes régionales — nées de l'équilibre entre Groudon et Kyogre.",content:[
+      {type:"lead",text:"Nées de l'équilibre fragile entre Groudon et Kyogre, ces trois formes régionales sont les *manifestations vivantes* des conditions qui ont rendu la vie possible sur Pangée."},
+      {type:"starter-block",data:{name:"Typhlosion de Pangée",quote:"La Terre en fusion",color:"coral",types:[["coral","Feu"],["gray","Roche"]],desc:"Né des premières éruptions de la Pangée, sa fourrure s'est pétrifiée en basalte incandescent. Ses flammes ne brûlent plus vers le haut — elles *coulent vers le bas comme de la lave*. Il ne court pas : il avance comme une coulée, inévitable et implacable.",stats:{PV:98,Attaque:118,Défense:95,"Atq Spé":74,"Déf Spé":80,Vitesse:92},totalBST:557,signature:{name:"Frappe Magma",pwr:90,acc:100,pp:10,desc:"Le lanceur s'abat sur la cible avec un poing de roche en fusion. La lave qui se solidifie à l'impact réduit la Vitesse de la cible d'un cran."},talent:{name:"Corps Ardent",desc:"Les capacités directes reçues ont 30% de chances de brûler leur lanceur."},moves:[{name:"Nitrocharge",type:"coral",pwr:50,acc:100,pp:20},{name:"Éboulement",type:"gray",pwr:75,acc:90,pp:10},{name:"Séisme",type:"amber",pwr:100,acc:100,pp:10},{name:"Gyroballe",type:"gray",pwr:null,acc:100,pp:5}]}},
+      {type:"starter-block",data:{name:"Serperior de Pangée",quote:"La Nature vénérable",color:"green",types:[["green","Plante"],["blue","Dragon"]],desc:"Incarnation de la végétation primordiale de la Pangée — massive, primitive, indestructible. Ses écailles ressemblent à de l'écorce d'arbre millénaire. Il ne combat jamais en premier. Il n'en a jamais eu besoin.",stats:{PV:75,Attaque:115,Défense:90,"Atq Spé":60,"Déf Spé":83,Vitesse:125},totalBST:548,signature:{name:"Étreinte Sylvestre",pwr:100,acc:75,pp:10,desc:"Le lanceur s'enroule violemment autour de la cible et la broie dans ses écailles. Empêche la cible de quitter le terrain tant que Serperior reste au combat."},talent:{name:"Multiécaille",desc:"Diminue les dégâts subis par les capacités offensives si le Pokémon a tous ses PV."},moves:[{name:"Danse Draco",type:"blue",pwr:null,acc:null,pp:20},{name:"Lame Feuille",type:"green",pwr:90,acc:100,pp:15},{name:"Rafale Écailles",type:"blue",pwr:25,acc:90,pp:20},{name:"Vitesse Extrême",type:"gray",pwr:80,acc:100,pp:5}]}},
+      {type:"starter-block",data:{name:"Primarina de Pangée",quote:"L'Eau mystérieuse",color:"blue",types:[["blue","Eau"],["purple","Spectre"]],desc:"Née des abysses de Panthalassa, là où la lumière n'est jamais arrivée. Elle est translucide, bioluminescente par intermittence, visible seulement quand elle le décide. Elle est la première à *sentir* l'arrivée de Deoxys — avant même que Rayquaza ne le détecte.",stats:{PV:100,Attaque:60,Défense:75,"Atq Spé":112,"Déf Spé":124,Vitesse:85},totalBST:556,signature:{name:"Mirage Abyssal",pwr:70,acc:100,pp:10,desc:"Le lanceur distord les reflets lumineux autour de lui pour frapper depuis un angle imperceptible. Inflige des dégâts et 50% de chances de rendre la cible confuse."},talent:{name:"Médic Nature",desc:"Le Pokémon soigne ses altérations de statut s'il switch ou en fin de combat."},moves:[{name:"Surf",type:"blue",pwr:90,acc:100,pp:15},{name:"Fontaine de Vie",type:"blue",pwr:null,acc:null,pp:10},{name:"Châtiment",type:"purple",pwr:65,acc:100,pp:10},{name:"Éclat Magique",type:"pink",pwr:80,acc:100,pp:10}]}}
     ]},
-    {id:"eclats",label:"Les Ãclats X",group:"Science",color:"blue",badge:"Science",badgeColor:"blue",title:"Les Ãclats X",meta:"Fragments de la mÃ©tÃ©orite Â· MÃ©canique centrale du jeu",summary:"Les fragments cosmiques qui ont rendu la planÃ¨te permÃ©able Ã  toutes les Ã©nergies extÃ©rieures.",content:[
-      {type:"lead",text:"La mÃ©tÃ©orite ne s'est pas vaporisÃ©e Ã  l'impact. Elle s'est fragmentÃ©e. Chacun de ses Ã©clats porte une quantitÃ© infime mais mesurable de l'**Ã©nergie X** â l'Ã©nergie cosmique originelle."},
-      {type:"info-row",items:[{label:"Fragments dispersÃ©s",value:"Des dizaines Ã  centaines"},{label:"Zone de dispersion",value:"Des milliers de km"},{label:"Ãclats nÃ©cessaires",value:"12 exactement"}]},
+    {id:"eclats",label:"Les Éclats X",group:"Science",color:"blue",badge:"Science",badgeColor:"blue",title:"Les Éclats X",meta:"Fragments de la météorite · Mécanique centrale du jeu",summary:"Les fragments cosmiques qui ont rendu la planète perméable à toutes les énergies extérieures.",content:[
+      {type:"lead",text:"La météorite ne s'est pas vaporisée à l'impact. Elle s'est fragmentée. Chacun de ses éclats porte une quantité infime mais mesurable de l'**énergie X** — l'énergie cosmique originelle."},
+      {type:"info-row",items:[{label:"Fragments dispersés",value:"Des dizaines à centaines"},{label:"Zone de dispersion",value:"Des milliers de km"},{label:"Éclats nécessaires",value:"12 exactement"}]},
       {type:"divider"},
-      {type:"mechanic",title:"Signature dormante",icon:"â",text:"Pris isolÃ©ment, un Ãclat X est dormant. Sa signature isotopique est impossible Ã  produire par des processus gÃ©ologiques terrestres. Sa micro-structure cristalline ne ressemble Ã  rien de connu. Il attend."},
-      {type:"mechanic",title:"RÃ©sonance collective",icon:"â",text:"RÃ©unis, les Ãclats entrent en rÃ©sonance â une Ã©mission d'Ã©nergie basse frÃ©quence dont l'intensitÃ© croÃ®t avec le nombre de fragments rassemblÃ©s. Comme les morceaux d'un mÃªme enregistrement qui cherche Ã  se rejouer.",chain:["1 Ãclat : dormant","Plusieurs : rÃ©sonance","12 rÃ©unis : seuil critique","La Fissure s'ouvre"]},
-      {type:"mechanic",title:"ImprÃ©gnation planÃ©taire",icon:"â",text:"L'Ã©nergie X s'est diffusÃ©e dans la croÃ»te terrestre, les ocÃ©ans et l'atmosphÃ¨re. La planÃ¨te est devenue *permÃ©able aux Ã©nergies cosmiques extÃ©rieures*. Les Ãclats X ne sont pas la source des phÃ©nomÃ¨nes extraordinaires â ils sont la raison pour laquelle la planÃ¨te Ã©tait **capable de les absorber**."},
+      {type:"mechanic",title:"Signature dormante",icon:"◇",text:"Pris isolément, un Éclat X est dormant. Sa signature isotopique est impossible à produire par des processus géologiques terrestres. Sa micro-structure cristalline ne ressemble à rien de connu. Il attend."},
+      {type:"mechanic",title:"Résonance collective",icon:"◈",text:"Réunis, les Éclats entrent en résonance — une émission d'énergie basse fréquence dont l'intensité croît avec le nombre de fragments rassemblés. Comme les morceaux d'un même enregistrement qui cherche à se rejouer.",chain:["1 Éclat : dormant","Plusieurs : résonance","12 réunis : seuil critique","La Fissure s'ouvre"]},
+      {type:"mechanic",title:"Imprégnation planétaire",icon:"◉",text:"L'énergie X s'est diffusée dans la croûte terrestre, les océans et l'atmosphère. La planète est devenue *perméable aux énergies cosmiques extérieures*. Les Éclats X ne sont pas la source des phénomènes extraordinaires — ils sont la raison pour laquelle la planète était **capable de les absorber**."},
       {type:"divider"},
-      {type:"h2",text:"Connexions inter-univers PokÃ©mon"},
-      {type:"conn-table",items:[{label:"MÃ©ga-Ãvolution",origin:"Hoenn",desc:"Mikado organ de Rayquaza, Ã©nergie X directe lors du combat originel"},{label:"Formes Primo",origin:"Hoenn",desc:"Groudon / Kyogre retrouvant l'Ã©tat antÃ©rieur Ã  l'interfÃ©rence X"},{label:"Dynamax",origin:"Galar",desc:"Eternatus (astÃ©roÃ¯de, -20 000 ans) â ancrÃ© via permÃ©abilitÃ© planÃ©taire"},{label:"TÃ©racristallisation",origin:"Paldea",desc:"Terapagos, Ã©nergie biologique intrinsÃ¨que â ancrÃ©e via permÃ©abilitÃ©"},{label:"Cristaux-Z",origin:"Alola",desc:"Necrozma (Ultra-Espace), nature photonique distincte des Ãclats X"}]}
+      {type:"h2",text:"Connexions inter-univers Pokémon"},
+      {type:"conn-table",items:[{label:"Méga-Évolution",origin:"Hoenn",desc:"Mikado organ de Rayquaza, énergie X directe lors du combat originel"},{label:"Formes Primo",origin:"Hoenn",desc:"Groudon / Kyogre retrouvant l'état antérieur à l'interférence X"},{label:"Dynamax",origin:"Galar",desc:"Eternatus (astéroïde, -20 000 ans) — ancré via perméabilité planétaire"},{label:"Téracristallisation",origin:"Paldea",desc:"Terapagos, énergie biologique intrinsèque — ancrée via perméabilité"},{label:"Cristaux-Z",origin:"Alola",desc:"Necrozma (Ultra-Espace), nature photonique distincte des Éclats X"}]}
     ]},
-    {id:"marqueur",label:"Le Marqueur X",group:"Science",color:"purple",badge:"XenogÃ©nomique",badgeColor:"purple",title:"Le Marqueur X & la Divergence",meta:"ThÃ¨se centrale du Pr. Wollemi Â· L'origine humaine",summary:"La question que personne ne posait : d'oÃ¹ viennent les humains ?",content:[
-      {type:"lead",text:"La communautÃ© scientifique s'est accordÃ©e sur un rÃ©cit fondateur. Ce rÃ©cit est cohÃ©rent, documentÃ©, et acceptÃ©. Ce qu'il n'explique pas, c'est **les humains**."},
-      {type:"callout",color:"purple",text:"Les humains ne descendent pas de Mew. Wollemi appelle ce problÃ¨me *la Divergence*. Dans l'ADN humain se trouvent des sÃ©quences dormantes qui n'appartiennent Ã  aucune lignÃ©e Ã©volutive terrestre identifiable â prÃ©sentes chez tous les humains, absentes de tous les PokÃ©mon."},
-      {type:"mechanic",title:"La Source X â l'hypothÃ¨se non publiÃ©e",icon:"â­",text:"Le Marqueur X partage avec l'ADN de Deoxys une logique structurelle que rien d'autre ne partage. L'hypothÃ¨se : Deoxys, ou un ancÃªtre cosmique de Deoxys, aurait introduit dans les premiÃ¨res formes de vie de la PangÃ©e un matÃ©riau gÃ©nÃ©tique exogÃ¨ne. Les humains seraient **le rÃ©sultat d'une contamination cosmique accidentelle**."},
-      {type:"quote",text:"Les phÃ©nomÃ¨nes extraordinaires de transformation que nous observons Ã  travers les rÃ©gions â MÃ©ga-Ãvolution, Formes Primo, Dynamax, TÃ©racristallisation â ne sont pas des accidents locaux. Ils sont des expressions rÃ©gionales d'une permÃ©abilitÃ© planÃ©taire globale. Cette permÃ©abilitÃ© a une date. Elle a un cratÃ¨re.",author:"Pr. Wollemi, notes personnelles"}
+    {id:"marqueur",label:"Le Marqueur X",group:"Science",color:"purple",badge:"Xenogénomique",badgeColor:"purple",title:"Le Marqueur X & la Divergence",meta:"Thèse centrale du Pr. Wollemi · L'origine humaine",summary:"La question que personne ne posait : d'où viennent les humains ?",content:[
+      {type:"lead",text:"La communauté scientifique s'est accordée sur un récit fondateur. Ce récit est cohérent, documenté, et accepté. Ce qu'il n'explique pas, c'est **les humains**."},
+      {type:"callout",color:"purple",text:"Les humains ne descendent pas de Mew. Wollemi appelle ce problème *la Divergence*. Dans l'ADN humain se trouvent des séquences dormantes qui n'appartiennent à aucune lignée évolutive terrestre identifiable — présentes chez tous les humains, absentes de tous les Pokémon."},
+      {type:"mechanic",title:"La Source X — l'hypothèse non publiée",icon:"⭐",text:"Le Marqueur X partage avec l'ADN de Deoxys une logique structurelle que rien d'autre ne partage. L'hypothèse : Deoxys, ou un ancêtre cosmique de Deoxys, aurait introduit dans les premières formes de vie de la Pangée un matériau génétique exogène. Les humains seraient **le résultat d'une contamination cosmique accidentelle**."},
+      {type:"quote",text:"Les phénomènes extraordinaires de transformation que nous observons à travers les régions — Méga-Évolution, Formes Primo, Dynamax, Téracristallisation — ne sont pas des accidents locaux. Ils sont des expressions régionales d'une perméabilité planétaire globale. Cette perméabilité a une date. Elle a un cratère.",author:"Pr. Wollemi, notes personnelles"}
     ]},
-    {id:"fissure",label:"La Fissure",group:"Science",color:"teal",badge:"MÃ©canique centrale",badgeColor:"teal",title:"La Fissure",meta:"Le portail temporel Â· Dispositif d'activation",summary:"La connexion directe entre le prÃ©sent et le sol de la PangÃ©e au moment de l'impact.",content:[
-      {type:"lead",text:"En cartographiant la distribution des Ãclats Premiers et en remontant la dÃ©rive des continents par modÃ©lisation gÃ©ophysique, Wollemi et **Arjun Vasi** ont calculÃ© le point d'impact originel â aujourd'hui sous **quatre mille mÃ¨tres d'eau**, au fond de l'Atlantique."},
-      {type:"mechanic",title:"Pas un voyage dans le temps",icon:"â",text:"La Fissure n'est pas un voyage dans le temps au sens abstrait. Une reconnexion directe entre deux points de la **mÃªme planÃ¨te** sÃ©parÃ©s par le temps : ici, aujourd'hui, et le sol de la PangÃ©e au moment prÃ©cis de l'impact de la mÃ©tÃ©orite."},
-      {type:"mechanic",title:"Le seuil de rÃ©sonance critique",icon:"â¦",text:"Douze Ãclats X rÃ©unis dans les bonnes conditions gÃ©omÃ©triques, activÃ©s par l'Ã©nergie calculÃ©e dans les modÃ¨les de **Arjun Vasi**, atteignent un seuil de rÃ©sonance critique. Ã ce seuil, la rÃ©sonance **rouvre** l'impact originel.",chain:["12 Ãclats rÃ©unis","Configuration gÃ©omÃ©trique exacte","Seuil critique atteint","La Fissure s'ouvre"]},
-      {type:"callout",color:"teal",text:"**Le portail de retour ne s'ouvre que lorsque les douze Ãclats sont rÃ©unis et activÃ©s simultanÃ©ment.** Ce que personne n'anticipe : que certains membres utiliseront leur fragment comme levier de pouvoir le moment venu."}
+    {id:"fissure",label:"La Fissure",group:"Science",color:"teal",badge:"Mécanique centrale",badgeColor:"teal",title:"La Fissure",meta:"Le portail temporel · Dispositif d'activation",summary:"La connexion directe entre le présent et le sol de la Pangée au moment de l'impact.",content:[
+      {type:"lead",text:"En cartographiant la distribution des Éclats Premiers et en remontant la dérive des continents par modélisation géophysique, Wollemi et **Arjun Vasi** ont calculé le point d'impact originel — aujourd'hui sous **quatre mille mètres d'eau**, au fond de l'Atlantique."},
+      {type:"mechanic",title:"Pas un voyage dans le temps",icon:"◎",text:"La Fissure n'est pas un voyage dans le temps au sens abstrait. Une reconnexion directe entre deux points de la **même planète** séparés par le temps : ici, aujourd'hui, et le sol de la Pangée au moment précis de l'impact de la météorite."},
+      {type:"mechanic",title:"Le seuil de résonance critique",icon:"✦",text:"Douze Éclats X réunis dans les bonnes conditions géométriques, activés par l'énergie calculée dans les modèles de **Arjun Vasi**, atteignent un seuil de résonance critique. À ce seuil, la résonance **rouvre** l'impact originel.",chain:["12 Éclats réunis","Configuration géométrique exacte","Seuil critique atteint","La Fissure s'ouvre"]},
+      {type:"callout",color:"teal",text:"**Le portail de retour ne s'ouvre que lorsque les douze Éclats sont réunis et activés simultanément.** Ce que personne n'anticipe : que certains membres utiliseront leur fragment comme levier de pouvoir le moment venu."}
     ]},
-    {id:"protagoniste",label:"Le Protagoniste",group:"Personnages",color:"amber",badge:"Joueur",badgeColor:"amber",title:"Le Protagoniste",meta:"L'homme / la femme de terrain Â· Alter ego du joueur",summary:"Pas de diplÃ´me, pas de titre. Une mÃ©thode que personne d'autre n'a.",content:[
-      {type:"lead",text:"Tu n'es pas chercheur. Tu n'as jamais publiÃ© d'article. Ce que tu sais faire, c'est trouver des PokÃ©mon que personne d'autre ne trouve."},
-      {type:"mechanic",title:"La mÃ©thode",icon:"â",text:"Tu sais lire un territoire, comprendre ce qu'un PokÃ©mon sauvage tolÃ¨re ou refuse, sentir le moment oÃ¹ l'approche est possible et celui oÃ¹ elle ne l'est pas encore. Tu construis de la confiance sans la forcer."},
+    {id:"protagoniste",label:"Le Protagoniste",group:"Personnages",color:"amber",badge:"Joueur",badgeColor:"amber",title:"Le Protagoniste",meta:"L'homme / la femme de terrain · Alter ego du joueur",summary:"Pas de diplôme, pas de titre. Une méthode que personne d'autre n'a.",content:[
+      {type:"lead",text:"Tu n'es pas chercheur. Tu n'as jamais publié d'article. Ce que tu sais faire, c'est trouver des Pokémon que personne d'autre ne trouve."},
+      {type:"mechanic",title:"La méthode",icon:"◎",text:"Tu sais lire un territoire, comprendre ce qu'un Pokémon sauvage tolère ou refuse, sentir le moment où l'approche est possible et celui où elle ne l'est pas encore. Tu construis de la confiance sans la forcer."},
       {type:"divider"},
       {type:"h2",text:"Le choix du starter"},
-      {type:"para",text:"Wollemi t'emmÃ¨ne dans la serre d'Ã©levage du laboratoire. Il se tourne vers toi et dit simplement : *Je t'en dois un depuis longtemps. Prends celui avec lequel tu te sens.* C'est seulement aprÃ¨s, PokÃ©mon en main, qu'il t'explique tout le reste."},
-      {type:"starter-choice",items:[{name:"HÃ©ricendre",evolution:"â Typhlosion de PangÃ©e",types:[["coral","Feu"],["gray","Roche"]],color:"coral",desc:"Le bÃ¢tisseur inÃ©vitable. Puissance physique brute et endurance volcanique."},{name:"VipÃ©lierre",evolution:"â Serperior de PangÃ©e",types:[["green","Plante"],["blue","Dragon"]],color:"green",desc:"Le vÃ©nÃ©rable. Vitesse et contrÃ´le â ne frappe jamais en premier."},{name:"Otaquin",evolution:"â Primarina de PangÃ©e",types:[["blue","Eau"],["purple","Spectre"]],color:"purple",desc:"L'invisible. Attaque spÃ©ciale â toujours un coup d'avance."}]},
+      {type:"para",text:"Wollemi t'emmène dans la serre d'élevage du laboratoire. Il se tourne vers toi et dit simplement : *Je t'en dois un depuis longtemps. Prends celui avec lequel tu te sens.* C'est seulement après, Pokémon en main, qu'il t'explique tout le reste."},
+      {type:"starter-choice",items:[{name:"Héricendre",evolution:"→ Typhlosion de Pangée",types:[["coral","Feu"],["gray","Roche"]],color:"coral",desc:"Le bâtisseur inévitable. Puissance physique brute et endurance volcanique."},{name:"Vipélierre",evolution:"→ Serperior de Pangée",types:[["green","Plante"],["blue","Dragon"]],color:"green",desc:"Le vénérable. Vitesse et contrôle — ne frappe jamais en premier."},{name:"Otaquin",evolution:"→ Primarina de Pangée",types:[["blue","Eau"],["purple","Spectre"]],color:"purple",desc:"L'invisible. Attaque spéciale — toujours un coup d'avance."}]},
       {type:"divider"},
-      {type:"h2",text:"Ãlia â La rivale silencieuse"},
-      {type:"callout",color:"purple",text:"Ãlia a investi dans Wollemi comme on investit dans quelqu'un dont on attend une validation explicite en retour. Quand elle te voit arriver â sans diplÃ´me, avec ta faÃ§on informelle d'exister dans l'espace du Professeur â elle enregistre la chaleur qu'il a pour toi. Elle ne dit rien. Elle stocke. **Elle est jalouse de ta lÃ©gÃ¨retÃ©.**"}
+      {type:"h2",text:"Élia — La rivale silencieuse"},
+      {type:"callout",color:"purple",text:"Élia a investi dans Wollemi comme on investit dans quelqu'un dont on attend une validation explicite en retour. Quand elle te voit arriver — sans diplôme, avec ta façon informelle d'exister dans l'espace du Professeur — elle enregistre la chaleur qu'il a pour toi. Elle ne dit rien. Elle stocke. **Elle est jalouse de ta légèreté.**"}
     ]},
-    {id:"wollemi-elia",label:"Wollemi & Ãlia",group:"Personnages",color:"gray",badge:"PNJ fondateurs",badgeColor:"gray",title:"Professeur Wollemi & Ãlia",meta:"Chef d'expÃ©dition Â· Doctorante Â· Le binÃ´me scientifique",summary:"Le chercheur qui cherche ce que tout le monde a cessÃ© de chercher, et l'assistante qui a tout investi pour Ãªtre lÃ .",content:[
-      {type:"lead",text:"Le *Wollemia nobilis* â surnommÃ© le dinosaure botanique â a Ã©tÃ© dÃ©couvert vivant en 1994. Morphologiquement inchangÃ© depuis 200 millions d'annÃ©es, il a vu la PangÃ©e. Le Professeur Wollemi partage quelque chose avec l'arbre qui lui a donnÃ© son nom."},
-      {type:"persons-grid",items:[{initials:"W",color:"gray",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/wollemi.png",name:"Professeur Wollemi",role:"Chef d'expÃ©dition Â· XenogÃ©nomique Â· Biologie Ã©volutive comparÃ©e",desc:"SpÃ©cialisÃ© en biologie Ã©volutive comparÃ©e et en *xenogÃ©nomique* â l'Ã©tude des sÃ©quences gÃ©nÃ©tiques prÃ©sentes chez les humains et les PokÃ©mon qui ne s'expliquent par aucun mÃ©canisme Ã©volutif terrestre connu. Sa thÃ¨se publiÃ©e en 2012 a Ã©tÃ© accueillie avec scepticisme poli."}]},
-      {type:"quote",text:"Les phÃ©nomÃ¨nes extraordinaires de transformation que nous observons Ã  travers les rÃ©gions â MÃ©ga-Ãvolution, Formes Primo, Dynamax, TÃ©racristallisation â ne sont pas des accidents locaux. Ils sont des expressions rÃ©gionales d'une permÃ©abilitÃ© planÃ©taire globale.",author:"Pr. Wollemi, notes personnelles"},
+    {id:"wollemi-elia",label:"Wollemi & Élia",group:"Personnages",color:"gray",badge:"PNJ fondateurs",badgeColor:"gray",title:"Professeur Wollemi & Élia",meta:"Chef d'expédition · Doctorante · Le binôme scientifique",summary:"Le chercheur qui cherche ce que tout le monde a cessé de chercher, et l'assistante qui a tout investi pour être là.",content:[
+      {type:"lead",text:"Le *Wollemia nobilis* — surnommé le dinosaure botanique — a été découvert vivant en 1994. Morphologiquement inchangé depuis 200 millions d'années, il a vu la Pangée. Le Professeur Wollemi partage quelque chose avec l'arbre qui lui a donné son nom."},
+      {type:"persons-grid",items:[{initials:"W",color:"gray",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/wollemi.png",name:"Professeur Wollemi",role:"Chef d'expédition · Xenogénomique · Biologie évolutive comparée",desc:"Spécialisé en biologie évolutive comparée et en *xenogénomique* — l'étude des séquences génétiques présentes chez les humains et les Pokémon qui ne s'expliquent par aucun mécanisme évolutif terrestre connu. Sa thèse publiée en 2012 a été accueillie avec scepticisme poli."}]},
+      {type:"quote",text:"Les phénomènes extraordinaires de transformation que nous observons à travers les régions — Méga-Évolution, Formes Primo, Dynamax, Téracristallisation — ne sont pas des accidents locaux. Ils sont des expressions régionales d'une perméabilité planétaire globale.",author:"Pr. Wollemi, notes personnelles"},
       {type:"divider"},
-      {type:"h2",text:"Ãlia (ou Ãlio)"},
-      {type:"callout",color:"purple",text:"Doctorante brillante, deux articles publiÃ©s Ã  24 ans. Elle a choisi Wollemi parce qu'elle croyait en sa thÃ¨se avant mÃªme de le rencontrer. Ce qui la ronge : elle attend une validation explicite que Wollemi exprime par la confiance, pas par les mots. Son arc : comprendre progressivement que la vraie question est ce qu'elle veut, elle, indÃ©pendamment de lui."}
+      {type:"h2",text:"Élia (ou Élio)"},
+      {type:"callout",color:"purple",text:"Doctorante brillante, deux articles publiés à 24 ans. Elle a choisi Wollemi parce qu'elle croyait en sa thèse avant même de le rencontrer. Ce qui la ronge : elle attend une validation explicite que Wollemi exprime par la confiance, pas par les mots. Son arc : comprendre progressivement que la vraie question est ce qu'elle veut, elle, indépendamment de lui."}
     ]},
-    {id:"expedition",label:"L'expÃ©dition",group:"Personnages",color:"gray",badge:"8 personnages",badgeColor:"gray",title:"Les 8 ExpÃ©diteurs",meta:"Porteurs des Ãclats X Â· Confrontations narratives",summary:"Chaque membre dÃ©tient un Ãclat. Chaque arc rÃ©vÃ¨le une limite humaine. Chaque confrontation est inÃ©vitable.",content:[
-      {type:"lead",text:"Chaque membre porte un Ãclat X â sans lequel le groupe ne peut pas rentrer. Dans la PangÃ©e, Ã  mesure que le groupe se fragmente, chaque confrontation est une collision humaine rendue inÃ©vitable par la pression d'un environnement hostile."},
+    {id:"expedition",label:"L'expédition",group:"Personnages",color:"gray",badge:"8 personnages",badgeColor:"gray",title:"Les 8 Expéditeurs",meta:"Porteurs des Éclats X · Confrontations narratives",summary:"Chaque membre détient un Éclat. Chaque arc révèle une limite humaine. Chaque confrontation est inévitable.",content:[
+      {type:"lead",text:"Chaque membre porte un Éclat X — sans lequel le groupe ne peut pas rentrer. Dans la Pangée, à mesure que le groupe se fragmente, chaque confrontation est une collision humaine rendue inévitable par la pression d'un environnement hostile."},
       {type:"eclat-table"}
     ]},
-    {id:"mecanique",label:"MÃ©caniques de jeu",group:"Conception",color:"purple",badge:"Game Design",badgeColor:"purple",title:"MÃ©caniques de jeu",meta:"SystÃ¨mes de combat Â· Progression narrative Â· Types",summary:"Le type Cosmique, la mÃ©canique des Ãclats et les connexions entre phÃ©nomÃ¨nes.",content:[
-      {type:"lead",text:"Le cÅur mÃ©canique du jeu repose sur trois systÃ¨mes imbriquÃ©s : le **type Cosmique**, la **progression par Ãclats**, et la **permÃ©abilitÃ© planÃ©taire** qui relie tous les phÃ©nomÃ¨nes extraordinaires du monde PokÃ©mon."},
-      {type:"mechanic",title:"Le type Cosmique",icon:"â­",text:"Deoxys reÃ§oit le **type Cosmique** â un type qui n'obÃ©it pas aux rÃ¨gles des types terrestres, qui ne s'inscrit dans aucun des Ã©quilibres naturels Ã©tablis par Groudon et Kyogre."},
-      {type:"mechanic",title:"8 Ãclats = 8 arcs narratifs",icon:"â",text:"Chaque Ãclat X est dÃ©tenu par un membre de l'expÃ©dition. Les rÃ©cupÃ©rer n'est pas une suite de combats â c'est une suite de *confrontations humaines*. Chaque arc rÃ©vÃ¨le pourquoi ce personnage a choisi de prioriser ses propres objectifs sur la cohÃ©sion du groupe.",chain:["Trouver le membre","Comprendre son arc","Confrontation","RÃ©cupÃ©rer l'Ãclat"]},
+    {id:"mecanique",label:"Mécaniques de jeu",group:"Conception",color:"purple",badge:"Game Design",badgeColor:"purple",title:"Mécaniques de jeu",meta:"Systèmes de combat · Progression narrative · Types",summary:"Le type Cosmique, la mécanique des Éclats et les connexions entre phénomènes.",content:[
+      {type:"lead",text:"Le cœur mécanique du jeu repose sur trois systèmes imbriqués : le **type Cosmique**, la **progression par Éclats**, et la **perméabilité planétaire** qui relie tous les phénomènes extraordinaires du monde Pokémon."},
+      {type:"mechanic",title:"Le type Cosmique",icon:"⭐",text:"Deoxys reçoit le **type Cosmique** — un type qui n'obéit pas aux règles des types terrestres, qui ne s'inscrit dans aucun des équilibres naturels établis par Groudon et Kyogre."},
+      {type:"mechanic",title:"8 Éclats = 8 arcs narratifs",icon:"◆",text:"Chaque Éclat X est détenu par un membre de l'expédition. Les récupérer n'est pas une suite de combats — c'est une suite de *confrontations humaines*. Chaque arc révèle pourquoi ce personnage a choisi de prioriser ses propres objectifs sur la cohésion du groupe.",chain:["Trouver le membre","Comprendre son arc","Confrontation","Récupérer l'Éclat"]},
       {type:"divider"},
-      {type:"h2",text:"Types des expÃ©diteurs"},
-      {type:"type-grid",items:[{name:"Hana",type:"Plante",color:"green"},{name:"Vael",type:"Acier",color:"gray"},{name:"Solano",type:"Normal",color:"amber"},{name:"Marrant",type:"Ãlectrik",color:"blue"},{name:"Carvalho",type:"FÃ©e",color:"pink"},{name:"Ashida",type:"Combat",color:"coral"},{name:"Shore",type:"Dragon",color:"teal"},{name:"Vasari",type:"Spectre",color:"purple"}]}
+      {type:"h2",text:"Types des expéditeurs"},
+      {type:"type-grid",items:[{name:"Hana",type:"Plante",color:"green"},{name:"Vael",type:"Acier",color:"gray"},{name:"Solano",type:"Normal",color:"amber"},{name:"Marrant",type:"Électrik",color:"blue"},{name:"Carvalho",type:"Fée",color:"pink"},{name:"Ashida",type:"Combat",color:"coral"},{name:"Shore",type:"Dragon",color:"teal"},{name:"Vasari",type:"Spectre",color:"purple"}]}
     ]}
   ],
   expediteurs:[
-    {num:"Ã2",name:"Pr. Wollemi",role:"Chef d'expÃ©dition â redondance de sÃ©curitÃ©",type:null,color:"gray",status:"secure"},
-    {num:"Ã1",name:"Ãlia / Ãlio",role:"Doctorante Â· Rivale Ã©motionnelle",type:null,color:"gray",status:"secure"},
-    {num:"Ã1",name:"Protagoniste (Toi)",role:"L'homme / la femme de terrain",type:null,color:"amber",status:"secure"},
-    {num:"Ã1",name:"Dr. Sekine Hana",role:"Biologiste / MÃ©decin",type:"Plante",color:"green",status:"recover",arc:"Face aux Ã©cosystÃ¨mes primitifs intacts, elle perd tout sens Ã©thique et des prioritÃ©s. Refuse d'abandonner un site lors d'une alerte de sÃ©curitÃ©.",trigger:"IncapacitÃ© Ã  hiÃ©rarchiser face Ã  l'unique"},
-    {num:"Ã1",name:"Cdt. Oreste Vael",role:"Militaire â agenda cachÃ©",type:"Acier",color:"gray",status:"recover",arc:"Ordres parallÃ¨les d'une agence non mentionnÃ©e. Sa crÃ©dibilitÃ© est rÃ©elle, ses objectifs dissimulÃ©s derriÃ¨re elle. Quand confrontÃ©, il explique â et son explication est presque convaincante.",trigger:"La loyautÃ© a plusieurs maÃ®tres"},
-    {num:"Ã1",name:"Mira Solano",role:"Journaliste / AttachÃ©e",type:"Normal",color:"amber",status:"recover",arc:"Copie toutes les donnÃ©es depuis le premier jour. Quand dÃ©couverte, elle nÃ©gocie â et instille des doutes sur les autres membres.",trigger:"Le journalisme comme prÃ©dation"},
-    {num:"Ã1",name:"Theo Marrant",role:"Logicien â 22 ans",type:"Ãlectrik",color:"blue",status:"recover",arc:"A conÃ§u les modÃ¨les de la Fissure seul en 6 semaines. Une erreur de calcul sur Deoxys met un membre en danger. Il ne sait pas comment exister dans un monde oÃ¹ ses erreurs ont des consÃ©quences physiques.",trigger:"L'effondrement de la grille de lecture"},
-    {num:"Ã1",name:"SÅur InÃªs Carvalho",role:"ThÃ©ologienne",type:"FÃ©e",color:"pink",status:"recover",arc:"Caution Ã©thique et politique. Ne bloque rien â rÃ©siste avec des faits. Son arc : une crise de foi silencieuse qui transforme ce en quoi elle croit.",trigger:"La foi qui mue, pas qui cÃ¨de"},
-    {num:"Ã1",name:"Riku Ashida",role:"Ancien Champion",type:"Combat",color:"coral",status:"recover",arc:"Ami de Wollemi depuis l'universitÃ©. Sa vision du dressage entre en friction avec l'approche du protagoniste. Une vieille ambition se rallume face Ã  Deoxys â capturer l'incapturable.",trigger:"L'ambition que l'on croyait morte"},
-    {num:"Ã1",name:"Caspian Shore",role:"Milliardaire â financement",type:"Dragon",color:"teal",status:"recover",arc:"A passÃ© sa vie Ã  possÃ©der des choses uniques. La PangÃ©e est remplie de choses uniques. Et Deoxys est la plus unique de toutes. L'idÃ©e de le capturer germe lentement, sans se formuler.",trigger:"PossÃ©der comme rÃ©flexe identitaire"},
-    {num:"Ã1",name:"Arjun Vasi",role:"Artiste / Documentariste",type:"Spectre",color:"purple",status:"recover",arc:"Observe, dessine, note. Sa dissolution est progressive â il disparaÃ®t seul dans la PangÃ©e de plus en plus longtemps. Pour le retrouver, il faut d'abord comprendre ce qu'il cherchait.",trigger:"L'observateur consumÃ© par ce qu'il observe"}
+    {num:"×2",name:"Pr. Wollemi",role:"Chef d'expédition — redondance de sécurité",type:null,color:"gray",status:"secure"},
+    {num:"×1",name:"Élia / Élio",role:"Doctorante · Rivale émotionnelle",type:null,color:"gray",status:"secure"},
+    {num:"×1",name:"Protagoniste (Toi)",role:"L'homme / la femme de terrain",type:null,color:"amber",status:"secure"},
+    {num:"×1",name:"Dr. Sekine Hana",role:"Biologiste / Médecin",type:"Plante",color:"green",status:"recover",arc:"Face aux écosystèmes primitifs intacts, elle perd tout sens éthique et des priorités. Refuse d'abandonner un site lors d'une alerte de sécurité.",trigger:"Incapacité à hiérarchiser face à l'unique"},
+    {num:"×1",name:"Cdt. Oreste Vael",role:"Militaire — agenda caché",type:"Acier",color:"gray",status:"recover",arc:"Ordres parallèles d'une agence non mentionnée. Sa crédibilité est réelle, ses objectifs dissimulés derrière elle. Quand confronté, il explique — et son explication est presque convaincante.",trigger:"La loyauté a plusieurs maîtres"},
+    {num:"×1",name:"Mira Solano",role:"Journaliste / Attachée",type:"Normal",color:"amber",status:"recover",arc:"Copie toutes les données depuis le premier jour. Quand découverte, elle négocie — et instille des doutes sur les autres membres.",trigger:"Le journalisme comme prédation"},
+    {num:"×1",name:"Theo Marrant",role:"Logicien — 22 ans",type:"Électrik",color:"blue",status:"recover",arc:"A conçu les modèles de la Fissure seul en 6 semaines. Une erreur de calcul sur Deoxys met un membre en danger. Il ne sait pas comment exister dans un monde où ses erreurs ont des conséquences physiques.",trigger:"L'effondrement de la grille de lecture"},
+    {num:"×1",name:"Sœur Inês Carvalho",role:"Théologienne",type:"Fée",color:"pink",status:"recover",arc:"Caution éthique et politique. Ne bloque rien — résiste avec des faits. Son arc : une crise de foi silencieuse qui transforme ce en quoi elle croit.",trigger:"La foi qui mue, pas qui cède"},
+    {num:"×1",name:"Riku Ashida",role:"Ancien Champion",type:"Combat",color:"coral",status:"recover",arc:"Ami de Wollemi depuis l'université. Sa vision du dressage entre en friction avec l'approche du protagoniste. Une vieille ambition se rallume face à Deoxys — capturer l'incapturable.",trigger:"L'ambition que l'on croyait morte"},
+    {num:"×1",name:"Caspian Shore",role:"Milliardaire — financement",type:"Dragon",color:"teal",status:"recover",arc:"A passé sa vie à posséder des choses uniques. La Pangée est remplie de choses uniques. Et Deoxys est la plus unique de toutes. L'idée de le capturer germe lentement, sans se formuler.",trigger:"Posséder comme réflexe identitaire"},
+    {num:"×1",name:"Arjun Vasi",role:"Artiste / Documentariste",type:"Spectre",color:"purple",status:"recover",arc:"Observe, dessine, note. Sa dissolution est progressive — il disparaît seul dans la Pangée de plus en plus longtemps. Pour le retrouver, il faut d'abord comprendre ce qu'il cherchait.",trigger:"L'observateur consumé par ce qu'il observe"}
   ]
 }
 
-// âââ STORAGE POLYFILL ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── STORAGE POLYFILL ────────────────────────────────────────────────────────
 if(!window.storage){
   const _s={}
   window.storage={
