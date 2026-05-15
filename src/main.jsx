@@ -17,7 +17,6 @@ const D = {
   pink:{l:"#FBEAF0",m:"#D4537E",d:"#72243E",b:"#EE97B4"}
 }
 
-// ─── SIMPLE TEXT RENDERER ────────────────────────────────────────────────────
 function Txt({t,s}){
   if(!t) return null
   const parts = t.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g)
@@ -48,7 +47,6 @@ function StatBar({label,value}){
   </div>
 }
 
-// ─── BLOCK RENDERERS ─────────────────────────────────────────────────────────
 const Lead = ({text}) => <p style={{fontSize:15,lineHeight:1.8,color:m.tx,margin:'0 0 18px',paddingBottom:16,borderBottom:`1px solid ${m.bd}`}}><Txt t={text}/></p>
 const Para = ({text}) => <p style={{fontSize:14,lineHeight:1.75,color:m.txS,margin:'0 0 12px'}}><Txt t={text}/></p>
 const H2 = ({text}) => <h3 style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.1em',margin:'20px 0 10px',padding:0}}>{text}</h3>
@@ -114,7 +112,7 @@ function LegendaryGrid({items}){
       const c=D[it.color]||D.gray, img=SPRITES[it.imgKey]
       return <div key={i} style={{background:m.bgS,border:`1px solid ${m.bd}`,borderTop:`2.5px solid ${c.m}`,borderRadius:10,overflow:'hidden'}}>
         {img&&<div style={{background:c.l,padding:'16px 0 0',display:'flex',justifyContent:'center',alignItems:'flex-end',height:110}}>
-          <img src={img} alt={it.name} style={{height:96,width:'auto',objectFit:'contain',filter:'drop-shadow(0 2px 8px rgba(0,0,0,0.15))'}}/>
+          <img src={img} alt={it.name} style={{height:96,width:'auto',objectFit:'contain',filter:'drop-shadow(0 2px 8px rgba(0,0,0,0.15))'}}/> 
         </div>}
         <div style={{padding:'10px 14px 14px'}}>
           <div style={{fontSize:14,fontWeight:600,color:m.tx,marginBottom:1}}>{it.name}</div>
@@ -127,7 +125,6 @@ function LegendaryGrid({items}){
   </div>
 }
 
-// Starter images (base64 from original bundle - using placeholder approach)
 function StarterBlock({data}){
   const [tab,setTab] = useState('stats')
   const c=D[data.color]||D.gray
@@ -201,11 +198,17 @@ function StarterChoice({items}){
   </div>
 }
 
+function Avatar({imgUrl, initials, color, size=72}){
+  const c=D[color]||D.gray
+  if(imgUrl) return <img src={imgUrl} alt={initials} style={{width:size,height:size,borderRadius:'50%',objectFit:'cover',objectPosition:'top',border:`2px solid ${c.b}`,flexShrink:0}}/>
+  return <div style={{width:size,height:size,borderRadius:'50%',background:c.l,border:`2px solid ${c.b}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:size*0.3,fontWeight:700,color:c.d,flexShrink:0}}>{initials}</div>
+}
+
 function PersonCard({person}){
   const c=D[person.color]||D.gray
   return <div style={{border:`1px solid ${m.bd}`,borderRadius:12,overflow:'hidden',marginBottom:18}}>
     <div style={{background:c.l,borderBottom:`1px solid ${c.b}`,padding:'18px 20px',display:'flex',gap:16,alignItems:'flex-start'}}>
-      <div style={{width:72,height:72,borderRadius:'50%',background:c.l,border:`2px solid ${c.b}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,fontWeight:700,color:c.d,flexShrink:0}}>{person.initials}</div>
+      <Avatar imgUrl={person.imgUrl} initials={person.initials} color={person.color} size={80}/>
       <div style={{flex:1}}>
         <div style={{fontSize:16,fontWeight:700,color:c.d}}>{person.name}</div>
         <div style={{fontSize:11,color:c.m,marginTop:2,marginBottom:8}}>{person.role}</div>
@@ -239,7 +242,7 @@ function EclatTable({expediteurs}){
       const c=D[e.color]||D.gray
       return <div key={i} style={{display:'flex',alignItems:'center',gap:9,padding:'8px 12px',background:m.bgS,border:`1px solid ${m.bd}`,borderRadius:8,marginBottom:5}}>
         <span style={{fontSize:10,color:m.txM,width:20}}>{e.num}</span>
-        <div style={{width:28,height:28,borderRadius:'50%',background:c.l,color:c.d,display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:600,flexShrink:0,border:`1.5px solid ${c.b}`}}>{e.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</div>
+        <Avatar imgUrl={e.imgUrl} initials={e.name.split(' ').map(w=>w[0]).join('').slice(0,2)} color={e.color} size={32}/>
         <div style={{flex:1}}>
           <div style={{fontSize:13,fontWeight:600,color:m.tx}}>{e.name}</div>
           <div style={{fontSize:11,color:m.txM}}>{e.role}</div>
@@ -254,7 +257,7 @@ function EclatTable({expediteurs}){
       return <div key={i} style={{marginBottom:5,border:`1px solid ${m.bd}`,borderRadius:8,overflow:'hidden'}}>
         <button onClick={()=>setOpen(isOpen?null:i)} style={{width:'100%',display:'flex',alignItems:'center',gap:9,padding:'8px 12px',background:m.bgS,border:'none',cursor:'pointer',textAlign:'left'}}>
           <span style={{fontSize:10,color:m.txM,width:20}}>{e.num}</span>
-          <div style={{width:28,height:28,borderRadius:'50%',background:c.l,color:c.d,display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:600,flexShrink:0,border:`1.5px solid ${c.b}`}}>{e.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</div>
+          <Avatar imgUrl={e.imgUrl} initials={e.name.split(' ').map(w=>w[0]).join('').slice(0,2)} color={e.color} size={32}/>
           <div style={{flex:1,textAlign:'left'}}>
             <div style={{fontSize:13,fontWeight:600,color:m.tx}}>{e.name}</div>
             <div style={{fontSize:11,color:m.txM}}>{e.role}</div>
@@ -295,7 +298,6 @@ function TypeGrid({items}){
   </div>
 }
 
-// ─── BLOCK DISPATCHER ────────────────────────────────────────────────────────
 function renderBlock(block, i, data){
   switch(block.type){
     case 'lead': return <Lead key={i} text={block.text}/>
@@ -320,7 +322,6 @@ function renderBlock(block, i, data){
   }
 }
 
-// ─── MAIN APP ─────────────────────────────────────────────────────────────────
 function App(){
   const [data, setData] = useState(null)
   const [sectionId, setSectionId] = useState('monde')
@@ -438,7 +439,6 @@ function App(){
   </div>
 }
 
-// ─── DATA ────────────────────────────────────────────────────────────────────
 const DEFAULT_DATA = {
   meta:{title:"Pokémon Legends : Pangée",subtitle:"Encyclopédie de conception",version:"v3.0",lastUpdated:new Date().toISOString().split('T')[0]},
   sections:[
@@ -538,8 +538,8 @@ const DEFAULT_DATA = {
     ]}
   ],
   expediteurs:[
-    {num:"×2",name:"Pr. Wollemi",role:"Chef d'expédition — redondance de sécurité",type:null,color:"gray",status:"secure"},
-    {num:"×1",name:"Élia / Élio",role:"Doctorante · Rivale émotionnelle",type:null,color:"gray",status:"secure"},
+    {num:"×2",name:"Pr. Wollemi",role:"Chef d'expédition — redondance de sécurité",type:null,color:"gray",status:"secure",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Professeur Wollemi.png"},
+    {num:"×1",name:"Élia / Élio",role:"Doctorante · Rivale émotionnelle",type:null,color:"gray",status:"secure",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Assistante Élia.png"},
     {num:"×1",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Protagoniste.png",name:"Protagoniste (Toi)",role:"L'homme / la femme de terrain",type:null,color:"amber",status:"secure"},
     {num:"×1",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Dr. Sekine Hana.png",name:"Dr. Sekine Hana",role:"Biologiste / Médecin",type:"Plante",color:"green",status:"recover",arc:"Face aux écosystèmes primitifs intacts, elle perd tout sens éthique et des priorités. Refuse d'abandonner un site lors d'une alerte de sécurité.",trigger:"Incapacité à hiérarchiser face à l'unique"},
     {num:"×1",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Commandant Oreste Vael.png",name:"Cdt. Oreste Vael",role:"Militaire — agenda caché",type:"Acier",color:"gray",status:"recover",arc:"Ordres parallèles d'une agence non mentionnée. Sa crédibilité est réelle, ses objectifs dissimulés derrière elle. Quand confronté, il explique — et son explication est presque convaincante.",trigger:"La loyauté a plusieurs maîtres"},
@@ -552,7 +552,6 @@ const DEFAULT_DATA = {
   ]
 }
 
-// ─── STORAGE POLYFILL ────────────────────────────────────────────────────────
 if(!window.storage){
   const _s={}
   window.storage={
