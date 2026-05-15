@@ -226,13 +226,11 @@ function PersonCard({person}){
   </div>
 }
 
-// ─── NOUVELLE CARTE EXPÉDITEUR COMPLÈTE ──────────────────────────────────────
-function ExpediteurCard({e, defaultOpen=false}){
-  const [open, setOpen] = useState(defaultOpen)
+function ExpediteurCard({e}){
+  const [open, setOpen] = useState(false)
   const c=D[e.color]||D.gray
   const initials = e.name.split(' ').map(w=>w[0]).join('').slice(0,2)
   return <div style={{border:`1px solid ${m.bd}`,borderRadius:12,overflow:'hidden',marginBottom:14}}>
-    {/* Header cliquable */}
     <button onClick={()=>setOpen(o=>!o)} style={{width:'100%',background:open?c.l:m.bgS,border:'none',borderBottom:open?`1px solid ${c.b}`:'none',padding:'14px 18px',display:'flex',alignItems:'center',gap:14,cursor:'pointer',textAlign:'left',transition:'background 0.15s'}}>
       <Avatar imgUrl={e.imgUrl} initials={initials} color={e.color} size={52}/>
       <div style={{flex:1,minWidth:0}}>
@@ -250,34 +248,26 @@ function ExpediteurCard({e, defaultOpen=false}){
         <span style={{fontSize:12,color:m.txM,width:16,textAlign:'center'}}>{open?'↑':'↓'}</span>
       </div>
     </button>
-
-    {/* Contenu déplié */}
     {open&&<div style={{display:'grid',gridTemplateColumns:'200px 1fr',background:m.bg}}>
-      {/* Colonne gauche — photo grande */}
       <div style={{borderRight:`1px solid ${m.bd}`,display:'flex',flexDirection:'column',alignItems:'center',padding:'20px 16px',background:c.l,gap:10}}>
         <Avatar imgUrl={e.imgUrl} initials={initials} color={e.color} size={140}/>
         {e.type&&<div style={{marginTop:4}}><Tag color={e.color} label={e.type}/></div>}
         <div style={{fontSize:10,color:c.m,textAlign:'center',lineHeight:1.5,marginTop:4}}>{e.role}</div>
       </div>
-
-      {/* Colonne droite — infos */}
       <div style={{padding:'18px 20px',display:'flex',flexDirection:'column',gap:0}}>
         {e.desc&&<>
           <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:7}}>Profil</div>
           <p style={{fontSize:13.5,lineHeight:1.7,color:m.txS,margin:'0 0 16px'}}>{e.desc}</p>
         </>}
-
         {e.objective&&<>
-          <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:7}}>Objectif officiel</div>
-          <p style={{fontSize:13,lineHeight:1.6,color:m.txS,margin:'0 0 16px',paddingLeft:10,borderLeft:`2px solid ${m.bd}`}}>{e.objective}</p>
+          <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:7}}>Objectif</div>
+          <p style={{fontSize:13,lineHeight:1.6,color:m.txS,margin:'0 0 16px',paddingLeft:10,borderLeft:`2px solid ${c.b}`}}>{e.objective}</p>
         </>}
-
         {e.arc&&<>
           <div style={{height:1,background:m.bd,margin:'0 0 16px'}}/>
           <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:7}}>Arc narratif</div>
           <p style={{fontSize:13,lineHeight:1.65,color:m.txS,margin:'0 0 10px'}}>{e.arc}</p>
         </>}
-
         {e.trigger&&<div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,color:c.m,marginTop:2}}>
           <span style={{fontSize:9}}>◆</span>
           <span style={{fontStyle:'italic'}}>{e.trigger}</span>
@@ -537,7 +527,7 @@ const DEFAULT_DATA = {
       {type:"mechanic",title:"Le seuil de résonance critique",icon:"✦",text:"Douze Éclats X réunis dans les bonnes conditions géométriques, activés par l'énergie calculée dans les modèles de **Arjun Vasi**, atteignent un seuil de résonance critique. À ce seuil, la résonance **rouvre** l'impact originel.",chain:["12 Éclats réunis","Configuration géométrique exacte","Seuil critique atteint","La Fissure s'ouvre"]},
       {type:"callout",color:"teal",text:"**Le portail de retour ne s'ouvre que lorsque les douze Éclats sont réunis et activés simultanément.** Ce que personne n'anticipe : que certains membres utiliseront leur fragment comme levier de pouvoir le moment venu."}
     ]},
-    {id:"protagoniste",label:"Le Protagoniste",group:"Personnages",color:"amber",badge:"Joueur",badgeColor:"amber",title:"Le Protagoniste",meta:"L'homme / la femme de terrain · Alter ego du joueur",summary:"Pas de diplôme, pas de titre. Une méthode que personne d'autre n'a.",content:[
+    {id:"protagoniste",label:"Le Protagoniste",group:"Personnages",color:"amber",badge:"Joueur",badgeColor:"amber",title:"Le Protagoniste",meta:"L'homme de terrain · Alter ego du joueur",summary:"Pas de diplôme, pas de titre. Une méthode que personne d'autre n'a.",content:[
       {type:"lead",text:"Tu n'es pas chercheur. Tu n'as jamais publié d'article. Ce que tu sais faire, c'est trouver des Pokémon que personne d'autre ne trouve."},
       {type:"mechanic",title:"La méthode",icon:"◎",text:"Tu sais lire un territoire, comprendre ce qu'un Pokémon sauvage tolère ou refuse, sentir le moment où l'approche est possible et celui où elle ne l'est pas encore. Tu construis de la confiance sans la forcer."},
       {type:"divider"},
@@ -553,7 +543,7 @@ const DEFAULT_DATA = {
       {type:"persons-grid",items:[{initials:"W",color:"gray",imgUrl:`${BASE}/Professeur%20Wollemi.png`,name:"Professeur Wollemi",role:"Chef d'expédition · Xenogénomique · Biologie évolutive comparée",desc:"Spécialisé en biologie évolutive comparée et en *xenogénomique* — l'étude des séquences génétiques présentes chez les humains et les Pokémon qui ne s'expliquent par aucun mécanisme évolutif terrestre connu. Sa thèse publiée en 2012 a été accueillie avec scepticisme poli."}]},
       {type:"quote",text:"Les phénomènes extraordinaires de transformation que nous observons à travers les régions — Méga-Évolution, Formes Primo, Dynamax, Téracristallisation — ne sont pas des accidents locaux. Ils sont des expressions régionales d'une perméabilité planétaire globale.",author:"Pr. Wollemi, notes personnelles"},
       {type:"divider"},
-      {type:"h2",text:"Élia (ou Élio)"},
+      {type:"h2",text:"Élia"},
       {type:"callout",color:"purple",text:"Doctorante brillante, deux articles publiés à 24 ans. Elle a choisi Wollemi parce qu'elle croyait en sa thèse avant même de le rencontrer. Ce qui la ronge : elle attend une validation explicite que Wollemi exprime par la confiance, pas par les mots. Son arc : comprendre progressivement que la vraie question est ce qu'elle veut, elle, indépendamment de lui."}
     ]},
     {id:"expedition",label:"L'expédition",group:"Personnages",color:"gray",badge:"8 personnages",badgeColor:"gray",title:"Les 8 Expéditeurs",meta:"Porteurs des Éclats X · Confrontations narratives",summary:"Chaque membre détient un Éclat. Chaque arc révèle une limite humaine. Chaque confrontation est inévitable.",content:[
@@ -566,7 +556,16 @@ const DEFAULT_DATA = {
       {type:"mechanic",title:"8 Éclats = 8 arcs narratifs",icon:"◆",text:"Chaque Éclat X est détenu par un membre de l'expédition. Les récupérer n'est pas une suite de combats — c'est une suite de *confrontations humaines*. Chaque arc révèle pourquoi ce personnage a choisi de prioriser ses propres objectifs sur la cohésion du groupe.",chain:["Trouver le membre","Comprendre son arc","Confrontation","Récupérer l'Éclat"]},
       {type:"divider"},
       {type:"h2",text:"Types des expéditeurs"},
-      {type:"type-grid",items:[{name:"Hana",type:"Plante",color:"green"},{name:"Vael",type:"Acier",color:"gray"},{name:"Solano",type:"Normal",color:"amber"},{name:"Marrant",type:"Électrik",color:"blue"},{name:"Carvalho",type:"Fée",color:"pink"},{name:"Ashida",type:"Combat",color:"coral"},{name:"Shore",type:"Dragon",color:"teal"},{name:"Vasari",type:"Spectre",color:"purple"}]}
+      {type:"type-grid",items:[
+        {name:"Hana",type:"Plante",color:"green"},
+        {name:"Vael",type:"Acier",color:"gray"},
+        {name:"Solano",type:"Normal",color:"amber"},
+        {name:"Marrant",type:"Électrik",color:"amber"},
+        {name:"Carvalho",type:"Fée",color:"pink"},
+        {name:"Ashida",type:"Combat",color:"coral"},
+        {name:"Shore",type:"Dragon",color:"teal"},
+        {name:"Vasi",type:"Spectre",color:"purple"}
+      ]}
     ]}
   ],
   expediteurs:[
@@ -574,15 +573,15 @@ const DEFAULT_DATA = {
      imgUrl:`${BASE}/Professeur%20Wollemi.png`,
      desc:"Spécialiste en xenogénomique et biologie évolutive comparée. Cherche ce que tout le monde a cessé de chercher — l'origine non-terrestre du génome humain. Sa thèse sur la Divergence a été publiée en 2012 et accueillie avec scepticisme poli par la communauté scientifique.",
      objective:"Atteindre le point d'impact originel de la météorite de Deoxys, collecter des preuves de la Source X, et prouver que les humains sont le résultat d'une contamination cosmique accidentelle."},
-    {num:"×1",name:"Élia / Élio",role:"Doctorante · Rivale émotionnelle",type:null,color:"gray",status:"secure",
+    {num:"×1",name:"Élia",role:"Doctorante · Rivale émotionnelle",type:null,color:"gray",status:"secure",
      imgUrl:`${BASE}/Assistante%20E%CC%81lia.png`,
      desc:"Doctorante brillante en troisième année sous la direction de Wollemi. Deux articles publiés à 24 ans. Elle a choisi Wollemi parce qu'elle croyait en sa thèse avant même de le rencontrer.",
      objective:"Valider empiriquement les hypothèses de Wollemi sur le Marqueur X. En attente implicite : recevoir enfin la validation explicite que Wollemi exprime seulement par la confiance, jamais par les mots.",
      arc:"Sa jalousie n'est pas caricaturale — elle est jalouse de la légèreté du protagoniste, de son absence de besoin de prouver quelque chose. Son arc : comprendre que la vraie question est ce qu'elle veut, elle, indépendamment de Wollemi.",
      trigger:"La validation qu'on attend d'un seul être"},
-    {num:"×1",name:"Protagoniste (Toi)",role:"L'homme / la femme de terrain",type:null,color:"amber",status:"secure",
+    {num:"×1",name:"Le Protagoniste",role:"L'homme de terrain",type:null,color:"amber",status:"secure",
      imgUrl:`${BASE}/Protagoniste.png`,
-     desc:"Pas de diplôme, pas de titre. Ce que tu sais faire, c'est trouver des Pokémon que personne d'autre ne trouve — et établir avec eux une relation suffisamment stable pour les ramener vivants.",
+     desc:"Pas de diplôme, pas de titre. Ce qu'il sait faire, c'est trouver des Pokémon que personne d'autre ne trouve — et établir avec eux une relation suffisamment stable pour les ramener vivants.",
      objective:"Servir d'interface entre les Pokémon de la Pangée et l'équipe. Construire du contact sans forcer. Travailler au rythme de l'autre."},
     {num:"×1",name:"Dr. Sekine Hana",role:"Biologiste / Médecin",type:"Plante",color:"green",status:"recover",
      imgUrl:`${BASE}/Dr.%20Sekine%20Hana.png`,
@@ -602,7 +601,7 @@ const DEFAULT_DATA = {
      objective:"Officiel : archivage public de l'expédition. Réel : livrer toutes les données — analyses, images, découvertes biologiques, observations sur Deoxys — à son réseau avant toute publication scientifique.",
      arc:"Copie méthodiquement toutes les données depuis le premier jour. Quand découverte, elle ne fuit pas — elle négocie, et instille des demi-vérités dans le groupe pour que sa propre trahison disparaisse dans le bruit général.",
      trigger:"Le journalisme comme prédation"},
-    {num:"×1",name:"Theo Marrant",role:"Logicien — 22 ans",type:"Électrik",color:"blue",status:"recover",
+    {num:"×1",name:"Theo Marrant",role:"Logicien — 22 ans",type:"Électrik",color:"amber",status:"recover",
      imgUrl:`${BASE}/Theo%20Marrant.png`,
      desc:"22 ans. Co-auteur anonyme des modèles mathématiques qui ont permis à Wollemi de calculer la localisation de la Fissure. A construit les équations en 6 semaines seul dans une chambre d'hôtel à Genève.",
      objective:"Valider sur le terrain les modèles de prédiction du comportement de Deoxys. Traiter la Pangée comme un environnement de données.",
