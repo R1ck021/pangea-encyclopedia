@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { createRoot } from 'react-dom/client'
 
-// ─── THEME ───────────────────────────────────────────────────────────────────
 const m = {
   bg:"#FFFFFF", bgS:"#F7F6F3", bgM:"#EEEDE9", bd:"#E2E0D9", bdM:"#D0CEC6",
   tx:"#1A1917", txS:"#57534E", txM:"#A8A29E", txH:"#C4BFB8"
@@ -200,8 +199,9 @@ function StarterChoice({items}){
 
 function Avatar({imgUrl, initials, color, size=72}){
   const c=D[color]||D.gray
-  if(imgUrl) return <img src={imgUrl} alt={initials} style={{width:size,height:size,borderRadius:'50%',objectFit:'cover',objectPosition:'top',border:`2px solid ${c.b}`,flexShrink:0}}/>
-  return <div style={{width:size,height:size,borderRadius:'50%',background:c.l,border:`2px solid ${c.b}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:size*0.3,fontWeight:700,color:c.d,flexShrink:0}}>{initials}</div>
+  const [err,setErr] = useState(false)
+  if(imgUrl && !err) return <img src={imgUrl} alt={initials} onError={()=>setErr(true)} style={{width:size,height:size,borderRadius:'50%',objectFit:'cover',objectPosition:'top center',border:`2px solid ${c.b}`,flexShrink:0}}/>
+  return <div style={{width:size,height:size,borderRadius:'50%',background:c.l,border:`2px solid ${c.b}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:Math.round(size*0.3),fontWeight:700,color:c.d,flexShrink:0}}>{initials}</div>
 }
 
 function PersonCard({person}){
@@ -226,52 +226,82 @@ function PersonCard({person}){
   </div>
 }
 
+// ─── NOUVELLE CARTE EXPÉDITEUR COMPLÈTE ──────────────────────────────────────
+function ExpediteurCard({e, defaultOpen=false}){
+  const [open, setOpen] = useState(defaultOpen)
+  const c=D[e.color]||D.gray
+  const initials = e.name.split(' ').map(w=>w[0]).join('').slice(0,2)
+  return <div style={{border:`1px solid ${m.bd}`,borderRadius:12,overflow:'hidden',marginBottom:14}}>
+    {/* Header cliquable */}
+    <button onClick={()=>setOpen(o=>!o)} style={{width:'100%',background:open?c.l:m.bgS,border:'none',borderBottom:open?`1px solid ${c.b}`:'none',padding:'14px 18px',display:'flex',alignItems:'center',gap:14,cursor:'pointer',textAlign:'left',transition:'background 0.15s'}}>
+      <Avatar imgUrl={e.imgUrl} initials={initials} color={e.color} size={52}/>
+      <div style={{flex:1,minWidth:0}}>
+        <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap',marginBottom:3}}>
+          <span style={{fontSize:15,fontWeight:700,color:open?c.d:m.tx}}>{e.name}</span>
+          <span style={{fontSize:10,color:m.txM}}>{e.num} éclat{e.num==='×2'?'s':''}</span>
+        </div>
+        <div style={{fontSize:11,color:open?c.m:m.txM}}>{e.role}</div>
+      </div>
+      <div style={{display:'flex',alignItems:'center',gap:6,flexShrink:0}}>
+        {e.type&&<Tag color={e.color} label={e.type} sm/>}
+        <span style={{fontSize:10,padding:'2px 8px',borderRadius:99,background:e.status==='secure'?D.green.l:D.amber.l,color:e.status==='secure'?D.green.d:D.amber.d,border:`1px solid ${e.status==='secure'?D.green.b:D.amber.b}`}}>
+          {e.status==='secure'?'Sécurisé':'À récupérer'}
+        </span>
+        <span style={{fontSize:12,color:m.txM,width:16,textAlign:'center'}}>{open?'↑':'↓'}</span>
+      </div>
+    </button>
+
+    {/* Contenu déplié */}
+    {open&&<div style={{display:'grid',gridTemplateColumns:'200px 1fr',background:m.bg}}>
+      {/* Colonne gauche — photo grande */}
+      <div style={{borderRight:`1px solid ${m.bd}`,display:'flex',flexDirection:'column',alignItems:'center',padding:'20px 16px',background:c.l,gap:10}}>
+        <Avatar imgUrl={e.imgUrl} initials={initials} color={e.color} size={140}/>
+        {e.type&&<div style={{marginTop:4}}><Tag color={e.color} label={e.type}/></div>}
+        <div style={{fontSize:10,color:c.m,textAlign:'center',lineHeight:1.5,marginTop:4}}>{e.role}</div>
+      </div>
+
+      {/* Colonne droite — infos */}
+      <div style={{padding:'18px 20px',display:'flex',flexDirection:'column',gap:0}}>
+        {e.desc&&<>
+          <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:7}}>Profil</div>
+          <p style={{fontSize:13.5,lineHeight:1.7,color:m.txS,margin:'0 0 16px'}}>{e.desc}</p>
+        </>}
+
+        {e.objective&&<>
+          <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:7}}>Objectif officiel</div>
+          <p style={{fontSize:13,lineHeight:1.6,color:m.txS,margin:'0 0 16px',paddingLeft:10,borderLeft:`2px solid ${m.bd}`}}>{e.objective}</p>
+        </>}
+
+        {e.arc&&<>
+          <div style={{height:1,background:m.bd,margin:'0 0 16px'}}/>
+          <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:7}}>Arc narratif</div>
+          <p style={{fontSize:13,lineHeight:1.65,color:m.txS,margin:'0 0 10px'}}>{e.arc}</p>
+        </>}
+
+        {e.trigger&&<div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,color:c.m,marginTop:2}}>
+          <span style={{fontSize:9}}>◆</span>
+          <span style={{fontStyle:'italic'}}>{e.trigger}</span>
+        </div>}
+      </div>
+    </div>}
+  </div>
+}
+
 function EclatTable({expediteurs}){
-  const [open,setOpen] = useState(null)
   const secure=expediteurs.filter(e=>e.status==='secure')
   const recover=expediteurs.filter(e=>e.status==='recover')
   return <div>
-    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:7,marginBottom:16}}>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:7,marginBottom:20}}>
       {[{label:'Éclats sécurisés',value:'4',c:'green'},{label:'À récupérer',value:'8',c:'amber'}].map((it,i)=><div key={i} style={{background:m.bgS,border:`1px solid ${m.bd}`,borderRadius:8,padding:'9px 13px'}}>
         <div style={{fontSize:10,color:m.txM,textTransform:'uppercase',letterSpacing:'0.07em',marginBottom:3}}>{it.label}</div>
         <div style={{fontSize:24,fontWeight:700,color:D[it.c].m}}>{it.value}</div>
       </div>)}
     </div>
-    <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:6}}>Sécurisés au départ</div>
-    {secure.map((e,i)=>{
-      const c=D[e.color]||D.gray
-      return <div key={i} style={{display:'flex',alignItems:'center',gap:9,padding:'8px 12px',background:m.bgS,border:`1px solid ${m.bd}`,borderRadius:8,marginBottom:5}}>
-        <span style={{fontSize:10,color:m.txM,width:20}}>{e.num}</span>
-        <Avatar imgUrl={e.imgUrl} initials={e.name.split(' ').map(w=>w[0]).join('').slice(0,2)} color={e.color} size={32}/>
-        <div style={{flex:1}}>
-          <div style={{fontSize:13,fontWeight:600,color:m.tx}}>{e.name}</div>
-          <div style={{fontSize:11,color:m.txM}}>{e.role}</div>
-        </div>
-        <span style={{fontSize:10,padding:'2px 8px',borderRadius:99,background:D.green.l,color:D.green.d,border:`1px solid ${D.green.b}`}}>Sécurisé</span>
-      </div>
-    })}
-    <div style={{height:14}}/>
-    <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:6}}>À récupérer dans la Pangée</div>
-    {recover.map((e,i)=>{
-      const isOpen=open===i, c=D[e.color]||D.gray
-      return <div key={i} style={{marginBottom:5,border:`1px solid ${m.bd}`,borderRadius:8,overflow:'hidden'}}>
-        <button onClick={()=>setOpen(isOpen?null:i)} style={{width:'100%',display:'flex',alignItems:'center',gap:9,padding:'8px 12px',background:m.bgS,border:'none',cursor:'pointer',textAlign:'left'}}>
-          <span style={{fontSize:10,color:m.txM,width:20}}>{e.num}</span>
-          <Avatar imgUrl={e.imgUrl} initials={e.name.split(' ').map(w=>w[0]).join('').slice(0,2)} color={e.color} size={32}/>
-          <div style={{flex:1,textAlign:'left'}}>
-            <div style={{fontSize:13,fontWeight:600,color:m.tx}}>{e.name}</div>
-            <div style={{fontSize:11,color:m.txM}}>{e.role}</div>
-          </div>
-          {e.type&&<Tag color={e.color} label={e.type} sm/>}
-          <span style={{fontSize:10,padding:'2px 8px',borderRadius:99,background:D.amber.l,color:D.amber.d,border:`1px solid ${D.amber.b}`,flexShrink:0}}>À récupérer</span>
-          <span style={{fontSize:11,color:m.txM,marginLeft:2,flexShrink:0}}>{isOpen?'↑':'↓'}</span>
-        </button>
-        {isOpen&&<div style={{padding:'10px 12px 12px 49px',background:m.bg,borderTop:`1px solid ${m.bd}`}}>
-          <p style={{fontSize:13,lineHeight:1.6,color:m.txS,margin:'0 0 7px'}}>{e.arc}</p>
-          {e.trigger&&<div style={{fontSize:11,color:c.m,display:'flex',gap:5,alignItems:'center'}}><span style={{fontSize:9}}>◆</span>{e.trigger}</div>}
-        </div>}
-      </div>
-    })}
+    <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:10}}>Sécurisés au départ</div>
+    {secure.map((e,i)=><ExpediteurCard key={i} e={e}/>)}
+    <div style={{height:10}}/>
+    <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:10}}>À récupérer dans la Pangée</div>
+    {recover.map((e,i)=><ExpediteurCard key={i} e={e}/>)}
   </div>
 }
 
@@ -439,6 +469,8 @@ function App(){
   </div>
 }
 
+const BASE = 'https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public'
+
 const DEFAULT_DATA = {
   meta:{title:"Pokémon Legends : Pangée",subtitle:"Encyclopédie de conception",version:"v3.0",lastUpdated:new Date().toISOString().split('T')[0]},
   sections:[
@@ -518,14 +550,14 @@ const DEFAULT_DATA = {
     ]},
     {id:"wollemi-elia",label:"Wollemi & Élia",group:"Personnages",color:"gray",badge:"PNJ fondateurs",badgeColor:"gray",title:"Professeur Wollemi & Élia",meta:"Chef d'expédition · Doctorante · Le binôme scientifique",summary:"Le chercheur qui cherche ce que tout le monde a cessé de chercher, et l'assistante qui a tout investi pour être là.",content:[
       {type:"lead",text:"Le *Wollemia nobilis* — surnommé le dinosaure botanique — a été découvert vivant en 1994. Morphologiquement inchangé depuis 200 millions d'années, il a vu la Pangée. Le Professeur Wollemi partage quelque chose avec l'arbre qui lui a donné son nom."},
-      {type:"persons-grid",items:[{initials:"W",color:"gray",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Professeur Wollemi.png",name:"Professeur Wollemi",role:"Chef d'expédition · Xenogénomique · Biologie évolutive comparée",desc:"Spécialisé en biologie évolutive comparée et en *xenogénomique* — l'étude des séquences génétiques présentes chez les humains et les Pokémon qui ne s'expliquent par aucun mécanisme évolutif terrestre connu. Sa thèse publiée en 2012 a été accueillie avec scepticisme poli."}]},
+      {type:"persons-grid",items:[{initials:"W",color:"gray",imgUrl:`${BASE}/Professeur%20Wollemi.png`,name:"Professeur Wollemi",role:"Chef d'expédition · Xenogénomique · Biologie évolutive comparée",desc:"Spécialisé en biologie évolutive comparée et en *xenogénomique* — l'étude des séquences génétiques présentes chez les humains et les Pokémon qui ne s'expliquent par aucun mécanisme évolutif terrestre connu. Sa thèse publiée en 2012 a été accueillie avec scepticisme poli."}]},
       {type:"quote",text:"Les phénomènes extraordinaires de transformation que nous observons à travers les régions — Méga-Évolution, Formes Primo, Dynamax, Téracristallisation — ne sont pas des accidents locaux. Ils sont des expressions régionales d'une perméabilité planétaire globale.",author:"Pr. Wollemi, notes personnelles"},
       {type:"divider"},
       {type:"h2",text:"Élia (ou Élio)"},
       {type:"callout",color:"purple",text:"Doctorante brillante, deux articles publiés à 24 ans. Elle a choisi Wollemi parce qu'elle croyait en sa thèse avant même de le rencontrer. Ce qui la ronge : elle attend une validation explicite que Wollemi exprime par la confiance, pas par les mots. Son arc : comprendre progressivement que la vraie question est ce qu'elle veut, elle, indépendamment de lui."}
     ]},
     {id:"expedition",label:"L'expédition",group:"Personnages",color:"gray",badge:"8 personnages",badgeColor:"gray",title:"Les 8 Expéditeurs",meta:"Porteurs des Éclats X · Confrontations narratives",summary:"Chaque membre détient un Éclat. Chaque arc révèle une limite humaine. Chaque confrontation est inévitable.",content:[
-      {type:"lead",text:"Chaque membre porte un Éclat X — sans lequel le groupe ne peut pas rentrer. Dans la Pangée, à mesure que le groupe se fragmente, chaque confrontation est une collision humaine rendue inévitable par la pression d'un environnement hostile."},
+      {type:"lead",text:"Chaque membre porte un Éclat X — sans lequel le groupe ne peut pas rentrer. Cliquer sur une carte pour voir le profil complet, les objectifs et l'arc narratif."},
       {type:"eclat-table"}
     ]},
     {id:"mecanique",label:"Mécaniques de jeu",group:"Conception",color:"purple",badge:"Game Design",badgeColor:"purple",title:"Mécaniques de jeu",meta:"Systèmes de combat · Progression narrative · Types",summary:"Le type Cosmique, la mécanique des Éclats et les connexions entre phénomènes.",content:[
@@ -538,17 +570,68 @@ const DEFAULT_DATA = {
     ]}
   ],
   expediteurs:[
-    {num:"×2",name:"Pr. Wollemi",role:"Chef d'expédition — redondance de sécurité",type:null,color:"gray",status:"secure",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Professeur Wollemi.png"},
-    {num:"×1",name:"Élia / Élio",role:"Doctorante · Rivale émotionnelle",type:null,color:"gray",status:"secure",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Assistante Élia.png"},
-    {num:"×1",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Protagoniste.png",name:"Protagoniste (Toi)",role:"L'homme / la femme de terrain",type:null,color:"amber",status:"secure"},
-    {num:"×1",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Dr. Sekine Hana.png",name:"Dr. Sekine Hana",role:"Biologiste / Médecin",type:"Plante",color:"green",status:"recover",arc:"Face aux écosystèmes primitifs intacts, elle perd tout sens éthique et des priorités. Refuse d'abandonner un site lors d'une alerte de sécurité.",trigger:"Incapacité à hiérarchiser face à l'unique"},
-    {num:"×1",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Commandant Oreste Vael.png",name:"Cdt. Oreste Vael",role:"Militaire — agenda caché",type:"Acier",color:"gray",status:"recover",arc:"Ordres parallèles d'une agence non mentionnée. Sa crédibilité est réelle, ses objectifs dissimulés derrière elle. Quand confronté, il explique — et son explication est presque convaincante.",trigger:"La loyauté a plusieurs maîtres"},
-    {num:"×1",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Mira Solano.png",name:"Mira Solano",role:"Journaliste / Attachée",type:"Normal",color:"amber",status:"recover",arc:"Copie toutes les données depuis le premier jour. Quand découverte, elle négocie — et instille des doutes sur les autres membres.",trigger:"Le journalisme comme prédation"},
-    {num:"×1",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Theo Marrant.png",name:"Theo Marrant",role:"Logicien — 22 ans",type:"Électrik",color:"blue",status:"recover",arc:"A conçu les modèles de la Fissure seul en 6 semaines. Une erreur de calcul sur Deoxys met un membre en danger. Il ne sait pas comment exister dans un monde où ses erreurs ont des conséquences physiques.",trigger:"L'effondrement de la grille de lecture"},
-    {num:"×1",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Sœur Inês Carvalho.png",name:"Sœur Inês Carvalho",role:"Théologienne",type:"Fée",color:"pink",status:"recover",arc:"Caution éthique et politique. Ne bloque rien — résiste avec des faits. Son arc : une crise de foi silencieuse qui transforme ce en quoi elle croit.",trigger:"La foi qui mue, pas qui cède"},
-    {num:"×1",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Riku Ashida.png",name:"Riku Ashida",role:"Ancien Champion",type:"Combat",color:"coral",status:"recover",arc:"Ami de Wollemi depuis l'université. Sa vision du dressage entre en friction avec l'approche du protagoniste. Une vieille ambition se rallume face à Deoxys — capturer l'incapturable.",trigger:"L'ambition que l'on croyait morte"},
-    {num:"×1",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Caspian Shore.png",name:"Caspian Shore",role:"Milliardaire — financement",type:"Dragon",color:"teal",status:"recover",arc:"A passé sa vie à posséder des choses uniques. La Pangée est remplie de choses uniques. Et Deoxys est la plus unique de toutes. L'idée de le capturer germe lentement, sans se formuler.",trigger:"Posséder comme réflexe identitaire"},
-    {num:"×1",imgUrl:"https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public/Arjun Vasi.png",name:"Arjun Vasi",role:"Artiste / Documentariste",type:"Spectre",color:"purple",status:"recover",arc:"Observe, dessine, note. Sa dissolution est progressive — il disparaît seul dans la Pangée de plus en plus longtemps. Pour le retrouver, il faut d'abord comprendre ce qu'il cherchait.",trigger:"L'observateur consumé par ce qu'il observe"}
+    {num:"×2",name:"Pr. Wollemi",role:"Chef d'expédition — redondance de sécurité",type:null,color:"gray",status:"secure",
+     imgUrl:`${BASE}/Professeur%20Wollemi.png`,
+     desc:"Spécialiste en xenogénomique et biologie évolutive comparée. Cherche ce que tout le monde a cessé de chercher — l'origine non-terrestre du génome humain. Sa thèse sur la Divergence a été publiée en 2012 et accueillie avec scepticisme poli par la communauté scientifique.",
+     objective:"Atteindre le point d'impact originel de la météorite de Deoxys, collecter des preuves de la Source X, et prouver que les humains sont le résultat d'une contamination cosmique accidentelle."},
+    {num:"×1",name:"Élia / Élio",role:"Doctorante · Rivale émotionnelle",type:null,color:"gray",status:"secure",
+     imgUrl:`${BASE}/Assistante%20E%CC%81lia.png`,
+     desc:"Doctorante brillante en troisième année sous la direction de Wollemi. Deux articles publiés à 24 ans. Elle a choisi Wollemi parce qu'elle croyait en sa thèse avant même de le rencontrer.",
+     objective:"Valider empiriquement les hypothèses de Wollemi sur le Marqueur X. En attente implicite : recevoir enfin la validation explicite que Wollemi exprime seulement par la confiance, jamais par les mots.",
+     arc:"Sa jalousie n'est pas caricaturale — elle est jalouse de la légèreté du protagoniste, de son absence de besoin de prouver quelque chose. Son arc : comprendre que la vraie question est ce qu'elle veut, elle, indépendamment de Wollemi.",
+     trigger:"La validation qu'on attend d'un seul être"},
+    {num:"×1",name:"Protagoniste (Toi)",role:"L'homme / la femme de terrain",type:null,color:"amber",status:"secure",
+     imgUrl:`${BASE}/Protagoniste.png`,
+     desc:"Pas de diplôme, pas de titre. Ce que tu sais faire, c'est trouver des Pokémon que personne d'autre ne trouve — et établir avec eux une relation suffisamment stable pour les ramener vivants.",
+     objective:"Servir d'interface entre les Pokémon de la Pangée et l'équipe. Construire du contact sans forcer. Travailler au rythme de l'autre."},
+    {num:"×1",name:"Dr. Sekine Hana",role:"Biologiste / Médecin",type:"Plante",color:"green",status:"recover",
+     imgUrl:`${BASE}/Dr.%20Sekine%20Hana.png`,
+     desc:"Biologiste spécialisée en biologie primitive et biochimie environnementale, également médecin attitrée de l'expédition. Brillante et instable face aux opportunités trop grandes.",
+     objective:"Documentation biologique des écosystèmes primitifs de la Pangée. Soins médicaux de l'équipe.",
+     arc:"Face aux écosystèmes primitifs intacts — des espèces éteintes depuis 200 millions d'années — elle perd tout sens éthique et des priorités. Commence à prélever des échantillons sans autorisation, s'isole du groupe pour des observations non planifiées. Refuse d'abandonner un site lors d'une alerte de sécurité.",
+     trigger:"Incapacité à hiérarchiser face à l'unique"},
+    {num:"×1",name:"Cdt. Oreste Vael",role:"Militaire — agenda caché",type:"Acier",color:"gray",status:"recover",
+     imgUrl:`${BASE}/Commandant%20Oreste%20Vael.png`,
+     desc:"Délégué officiellement pour assurer la sécurité de l'expédition. Calme, décisif, techniquement compétent dans des environnements hostiles.",
+     objective:"Officiel : sécurité de l'expédition. Réel : évaluer les applications stratégiques de la Fissure et de l'énergie de Deoxys pour une agence gouvernementale non mentionnée dans les accréditations.",
+     arc:"Sa crédibilité est réelle, ses objectifs dissimulés derrière elle. Commence à prendre des décisions unilatérales au nom de la sécurité collective — certaines servent le groupe, d'autres servent ses ordres. Quand confronté, il explique — et son explication est presque convaincante.",
+     trigger:"La loyauté a plusieurs maîtres"},
+    {num:"×1",name:"Mira Solano",role:"Journaliste / Attachée",type:"Normal",color:"amber",status:"recover",
+     imgUrl:`${BASE}/Mira%20Solano.png`,
+     desc:"Officiellement envoyée par un gouvernement régional pour documenter l'expédition. En réalité sous contrat exclusif avec un grand réseau médiatique.",
+     objective:"Officiel : archivage public de l'expédition. Réel : livrer toutes les données — analyses, images, découvertes biologiques, observations sur Deoxys — à son réseau avant toute publication scientifique.",
+     arc:"Copie méthodiquement toutes les données depuis le premier jour. Quand découverte, elle ne fuit pas — elle négocie, et instille des demi-vérités dans le groupe pour que sa propre trahison disparaisse dans le bruit général.",
+     trigger:"Le journalisme comme prédation"},
+    {num:"×1",name:"Theo Marrant",role:"Logicien — 22 ans",type:"Électrik",color:"blue",status:"recover",
+     imgUrl:`${BASE}/Theo%20Marrant.png`,
+     desc:"22 ans. Co-auteur anonyme des modèles mathématiques qui ont permis à Wollemi de calculer la localisation de la Fissure. A construit les équations en 6 semaines seul dans une chambre d'hôtel à Genève.",
+     objective:"Valider sur le terrain les modèles de prédiction du comportement de Deoxys. Traiter la Pangée comme un environnement de données.",
+     arc:"Une erreur de calcul — une variable qu'il a sous-évaluée parce qu'elle n'était pas quantifiable, relevant du comportement émotionnel de Deoxys — met directement en danger un membre du groupe. Il ne sait pas comment exister dans un monde où ses erreurs ont des conséquences physiques.",
+     trigger:"L'effondrement de la grille de lecture"},
+    {num:"×1",name:"Sœur Inês Carvalho",role:"Théologienne",type:"Fée",color:"pink",status:"recover",
+     imgUrl:`${BASE}/S%C5%93ur%20Ine%CC%82s%20Carvalho.png`,
+     desc:"Représentante d'une institution religieuse majeure. Femme de fort caractère, directe, drôle, débrouillarde, rodée au terrain par des années de missions humanitaires.",
+     objective:"Caution éthique et politique de l'expédition. Garantir qu'on ne 'joue pas à Arceus'. Résister avec des faits et des questions, pas avec de l'obstruction.",
+     arc:"Une crise de foi personnelle et silencieuse — ce qu'elle voit de ses propres yeux confirme des éléments de la thèse de Wollemi qu'elle avait réfutés avec des arguments théologiques solides. Elle ne cesse pas de croire. Mais ce en quoi elle croit se transforme sous ses pieds. Refuse de rendre son Éclat parce qu'elle n'est pas encore prête à rentrer.",
+     trigger:"La foi qui mue, pas qui cède"},
+    {num:"×1",name:"Riku Ashida",role:"Ancien Champion — ami de Wollemi",type:"Combat",color:"coral",status:"recover",
+     imgUrl:`${BASE}/Riku%20Ashida.png`,
+     desc:"Ancien finaliste de plusieurs Ligues majeures, ancien yakuza repenti. Ami de longue date de Wollemi depuis l'université. À la retraite depuis plusieurs années.",
+     objective:"Sécurité de combat et expertise dresseur dans un environnement inconnu. Être là si ça tourne mal.",
+     arc:"Sa vision du dressage — fondée sur la maîtrise technique — entre en friction avec l'approche du protagoniste. Dans la Pangée, les règles du dressage classique ne fonctionnent pas. Puis, face à Deoxys, une vieille ambition qu'il croyait morte se rallume : capturer l'incapturable. Prouver que le titre de Maître lui avait toujours appartenu.",
+     trigger:"L'ambition que l'on croyait morte"},
+    {num:"×1",name:"Caspian Shore",role:"Milliardaire — financement",type:"Dragon",color:"teal",status:"recover",
+     imgUrl:`${BASE}/Caspian%20Shore.png`,
+     desc:"58 ans. Fortune construite dans les technologies d'exploration géophysique. A financé l'acquisition des Éclats manquants, le recrutement de l'équipe et la construction du dispositif d'activation.",
+     objective:"Officiel : financement et logistique. Réel : être là pour voir. Et peut-être posséder.",
+     arc:"A passé sa vie à posséder des choses uniques. La Pangée est remplie de choses uniques. Et Deoxys est la chose la plus unique que quiconque ait jamais approchée. L'idée de le capturer germe lentement, sans se formuler — elle existe juste, dans ses décisions et ses déplacements.",
+     trigger:"Posséder comme réflexe identitaire"},
+    {num:"×1",name:"Arjun Vasi",role:"Artiste / Documentariste",type:"Spectre",color:"purple",status:"recover",
+     imgUrl:`${BASE}/Arjun%20Vasi.png`,
+     desc:"Peintre, écrivain, philosophe selon les jours. Invité personnellement par Shore contre l'avis de Wollemi. Son rôle : témoigner, pas analyser. Un œil sans grille de lecture.",
+     objective:"Documenter ce que ça fait d'être là — pas ce que ça signifie. Ses carnets accumulent des croquis naturalistes d'une précision remarquable et des pages de réflexions sur ce que c'est qu'être humain dans un monde qui existait avant l'humanité.",
+     arc:"Sa dissolution est progressive. Il commence à disparaître seul dans la Pangée pour des périodes de plus en plus longues — non pas pour accomplir quelque chose, mais parce que ce qu'il voit le consume d'une manière qu'il n'essaie pas de contenir. Pour le retrouver, il faut d'abord comprendre ce qu'il cherchait.",
+     trigger:"L'observateur consumé par ce qu'il observe"}
   ]
 }
 
