@@ -12,7 +12,8 @@ const D = {
   purple:{l:"#EEEDFE",m:"#7F77DD",d:"#3C3489",b:"#B0AAEC"},
   blue:{l:"#E6F1FB",m:"#378ADD",d:"#0C447C",b:"#87BDE8"},
   green:{l:"#EAF3DE",m:"#639922",d:"#27500A",b:"#99C45A"},
-  gray:{l:"#F1EFE8",m:"#888780",d:"#3A3935",b:"#C4C2B8"},
+  gray:{l:"#F1EFE8",m:"#A8A29E",d:"#57534E",b:"#D0CEC6"},
+  steel:{l:"#E8EAED",m:"#5B6470",d:"#1E2328",b:"#9AA0A6"},
   pink:{l:"#FBEAF0",m:"#D4537E",d:"#72243E",b:"#EE97B4"}
 }
 
@@ -558,8 +559,8 @@ const DEFAULT_DATA = {
       {type:"h2",text:"Types des expéditeurs"},
       {type:"type-grid",items:[
         {name:"Hana",type:"Plante",color:"green"},
-        {name:"Vael",type:"Acier",color:"gray"},
-        {name:"Solano",type:"Normal",color:"amber"},
+        {name:"Vael",type:"Acier",color:"steel"},
+        {name:"Solano",type:"Normal",color:"gray"},
         {name:"Marrant",type:"Électrik",color:"amber"},
         {name:"Carvalho",type:"Fée",color:"pink"},
         {name:"Ashida",type:"Combat",color:"coral"},
@@ -589,13 +590,13 @@ const DEFAULT_DATA = {
      objective:"Documentation biologique des écosystèmes primitifs de la Pangée. Soins médicaux de l'équipe.",
      arc:"Face aux écosystèmes primitifs intacts — des espèces éteintes depuis 200 millions d'années — elle perd tout sens éthique et des priorités. Commence à prélever des échantillons sans autorisation, s'isole du groupe pour des observations non planifiées. Refuse d'abandonner un site lors d'une alerte de sécurité.",
      trigger:"Incapacité à hiérarchiser face à l'unique"},
-    {num:"×1",name:"Cdt. Oreste Vael",role:"Militaire — agenda caché",type:"Acier",color:"gray",status:"recover",
+    {num:"×1",name:"Cdt. Oreste Vael",role:"Militaire — agenda caché",type:"Acier",color:"steel",status:"recover",
      imgUrl:`${BASE}/Commandant%20Oreste%20Vael.png`,
      desc:"Délégué officiellement pour assurer la sécurité de l'expédition. Calme, décisif, techniquement compétent dans des environnements hostiles.",
      objective:"Officiel : sécurité de l'expédition. Réel : évaluer les applications stratégiques de la Fissure et de l'énergie de Deoxys pour une agence gouvernementale non mentionnée dans les accréditations.",
      arc:"Sa crédibilité est réelle, ses objectifs dissimulés derrière elle. Commence à prendre des décisions unilatérales au nom de la sécurité collective — certaines servent le groupe, d'autres servent ses ordres. Quand confronté, il explique — et son explication est presque convaincante.",
      trigger:"La loyauté a plusieurs maîtres"},
-    {num:"×1",name:"Mira Solano",role:"Journaliste / Attachée",type:"Normal",color:"amber",status:"recover",
+    {num:"×1",name:"Mira Solano",role:"Journaliste / Attachée",type:"Normal",color:"gray",status:"recover",
      imgUrl:`${BASE}/Mira%20Solano.png`,
      desc:"Officiellement envoyée par un gouvernement régional pour documenter l'expédition. En réalité sous contrat exclusif avec un grand réseau médiatique.",
      objective:"Officiel : archivage public de l'expédition. Réel : livrer toutes les données — analyses, images, découvertes biologiques, observations sur Deoxys — à son réseau avant toute publication scientifique.",
