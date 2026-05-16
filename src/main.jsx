@@ -14,7 +14,10 @@ const D = {
   green:{l:"#EAF3DE",m:"#639922",d:"#27500A",b:"#99C45A"},
   gray:{l:"#F1EFE8",m:"#A8A29E",d:"#57534E",b:"#D0CEC6"},
   steel:{l:"#E8EAED",m:"#5B6470",d:"#1E2328",b:"#9AA0A6"},
-  pink:{l:"#FBEAF0",m:"#D4537E",d:"#72243E",b:"#EE97B4"}
+  pink:{l:"#FBEAF0",m:"#D4537E",d:"#72243E",b:"#EE97B4"},
+  poison:{l:"#F3E8FD",m:"#9B3DB8",d:"#4A1A6B",b:"#C98EE0"},
+  dark:{l:"#EEE9E4",m:"#5C4A3A",d:"#2A1F15",b:"#A08070"},
+  ice:{l:"#E8F6FB",m:"#3AAAC8",d:"#0E4F6B",b:"#82CDE0"}
 }
 
 function Txt({t,s}){
@@ -58,7 +61,7 @@ const Callout = ({color,text}) => {
   </div>
 }
 const Quote = ({text,author}) => <div style={{background:m.bgS,borderRadius:10,border:`1px solid ${m.bd}`,padding:'14px 18px',marginBottom:14}}>
-  <p style={{fontSize:13.5,lineHeight:1.75,color:m.txS,fontStyle:'italic',margin:'0 0 8px'}}>"{text}"</p>
+  <p style={{fontSize:13.5,lineHeight:1.75,color:m.txS,fontStyle:'italic',margin:'0 0 8px'}}>&#34;{text}&#34;</p>
   {author&&<div style={{fontSize:11,color:m.txM,textAlign:'right'}}>— {author}</div>}
 </div>
 const Mechanic = ({title,icon,text,chain}) => <div style={{display:'flex',gap:12,marginBottom:14}}>
@@ -120,6 +123,55 @@ function LegendaryGrid({items}){
           <div style={{marginBottom:9}}>{it.types.map(([tc,tl],j)=><Tag key={j} color={tc} label={tl}/>)}</div>
           <p style={{fontSize:12.5,lineHeight:1.6,color:m.txS,margin:0}}><Txt t={it.text}/></p>
         </div>
+      </div>
+    })}
+  </div>
+}
+
+function BiomeTable({items}){
+  return <div style={{border:`1px solid ${m.bd}`,borderRadius:10,overflow:'hidden',marginBottom:14}}>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr 1fr',background:m.bgM,borderBottom:`1px solid ${m.bd}`}}>
+      {['Biome','Météo','Types Apex','Signal Apex'].map((h,i)=><div key={i} style={{padding:'7px 12px',fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.07em'}}>{h}</div>)}
+    </div>
+    {items.map((it,i)=>{
+      const c=D[it.color]||D.gray
+      return <div key={i} style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr 1fr',borderBottom:i<items.length-1?`1px solid ${m.bd}`:'none',background:i%2===0?m.bg:m.bgS}}>
+        <div style={{padding:'10px 12px'}}>
+          <div style={{fontSize:12,fontWeight:600,color:m.tx,marginBottom:2}}>{it.biome}</div>
+          <div style={{fontSize:10,color:m.txM}}>{it.zone}</div>
+        </div>
+        <div style={{padding:'10px 12px',display:'flex',alignItems:'center'}}>
+          <span style={{fontSize:11,padding:'2px 8px',borderRadius:99,background:c.l,color:c.d,border:`1px solid ${c.b}`,fontWeight:500}}>{it.meteo}</span>
+        </div>
+        <div style={{padding:'10px 12px',display:'flex',alignItems:'center',gap:4,flexWrap:'wrap'}}>
+          {it.types.map(([tc,tl],j)=><Tag key={j} color={tc} label={tl} sm/>)}
+        </div>
+        <div style={{padding:'10px 12px',fontSize:11,color:m.txS,display:'flex',alignItems:'center'}}>{it.signal}</div>
+      </div>
+    })}
+  </div>
+}
+
+function HierarchieTable(){
+  const rows=[
+    {rang:'Sauvage',signal:'Aucun',entourage:'Meute d\'une espèce ou seul',combat:'Combat classique',capture:'Oui, directement',loot:'Objets courants',rc:'gray'},
+    {rang:'Alpha',signal:'Yeux rouges',entourage:'Congénères de même famille',combat:'Horde de la famille → boss seul',capture:'Oui, difficile',loot:'Objets rares d\'espèce',rc:'coral'},
+    {rang:'Apex',signal:'Marques blanches (leucisme)',entourage:'Équipe variée du biome',combat:'Raid 3 minions → boss seul',capture:'Non / Oui après réapparition',loot:'Matériaux exclusifs du biome',rc:'amber'},
+  ]
+  const cols=['Rang','Signal visuel','Entourage','Format combat','Capturable','Loot notable']
+  return <div style={{border:`1px solid ${m.bd}`,borderRadius:10,overflow:'hidden',marginBottom:14}}>
+    <div style={{display:'grid',gridTemplateColumns:'80px 1fr 1fr 1fr 100px 1fr',background:m.bgM,borderBottom:`1px solid ${m.bd}`}}>
+      {cols.map((h,i)=><div key={i} style={{padding:'7px 10px',fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.07em'}}>{h}</div>)}
+    </div>
+    {rows.map((r,i)=>{
+      const c=D[r.rc]||D.gray
+      return <div key={i} style={{display:'grid',gridTemplateColumns:'80px 1fr 1fr 1fr 100px 1fr',borderBottom:i<rows.length-1?`1px solid ${m.bd}`:'none',background:i%2===0?m.bg:m.bgS}}>
+        <div style={{padding:'10px 10px',display:'flex',alignItems:'center'}}><span style={{fontSize:12,fontWeight:700,color:c.m}}>{r.rang}</span></div>
+        <div style={{padding:'10px 10px',fontSize:12,color:m.txS,display:'flex',alignItems:'center'}}>{r.signal}</div>
+        <div style={{padding:'10px 10px',fontSize:12,color:m.txS,display:'flex',alignItems:'center'}}>{r.entourage}</div>
+        <div style={{padding:'10px 10px',fontSize:12,color:m.txS,display:'flex',alignItems:'center'}}>{r.combat}</div>
+        <div style={{padding:'10px 10px',fontSize:12,color:m.txS,display:'flex',alignItems:'center'}}>{r.capture}</div>
+        <div style={{padding:'10px 10px',fontSize:12,color:m.txS,display:'flex',alignItems:'center'}}>{r.loot}</div>
       </div>
     })}
   </div>
@@ -259,16 +311,16 @@ function ExpediteurCard({e}){
         {e.desc&&<>
           <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:7}}>Profil</div>
           <p style={{fontSize:13.5,lineHeight:1.7,color:m.txS,margin:'0 0 16px'}}>{e.desc}</p>
-        </>}
+        </>;}
         {e.objective&&<>
           <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:7}}>Objectif</div>
           <p style={{fontSize:13,lineHeight:1.6,color:m.txS,margin:'0 0 16px',paddingLeft:10,borderLeft:`2px solid ${c.b}`}}>{e.objective}</p>
-        </>}
+        </>;}
         {e.arc&&<>
           <div style={{height:1,background:m.bd,margin:'0 0 16px'}}/>
           <div style={{fontSize:10,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:7}}>Arc narratif</div>
           <p style={{fontSize:13,lineHeight:1.65,color:m.txS,margin:'0 0 10px'}}>{e.arc}</p>
-        </>}
+        </>;}
         {e.trigger&&<div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,color:c.m,marginTop:2}}>
           <span style={{fontSize:9}}>◆</span>
           <span style={{fontStyle:'italic'}}>{e.trigger}</span>
@@ -339,6 +391,8 @@ function renderBlock(block, i, data){
     case 'eclat-table': return <EclatTable key={i} expediteurs={data.expediteurs}/>
     case 'conn-table': return <ConnTable key={i} items={block.items}/>
     case 'type-grid': return <TypeGrid key={i} items={block.items}/>
+    case 'biome-table': return <BiomeTable key={i} items={block.items}/>
+    case 'hierarchie-table': return <HierarchieTable key={i}/>
     default: return null
   }
 }
@@ -360,7 +414,7 @@ function App(){
   useEffect(()=>{
     async function load(){
       try{
-        const r=await window.storage.get('pangea-enc-v13')
+        const r=await window.storage.get('pangea-enc-v14')
         setData(r&&r.value?JSON.parse(r.value):DEFAULT_DATA)
       }catch{ setData(DEFAULT_DATA) }
       setLoading(false)
@@ -463,7 +517,7 @@ function App(){
 const BASE = 'https://raw.githubusercontent.com/R1ck021/pangea-encyclopedia/main/public'
 
 const DEFAULT_DATA = {
-  meta:{title:"Pokémon Legends : Pangée",subtitle:"Encyclopédie de conception",version:"v3.0",lastUpdated:new Date().toISOString().split('T')[0]},
+  meta:{title:"Pokémon Legends : Pangée",subtitle:"Encyclopédie de conception",version:"v4.0",lastUpdated:"2026-05-16"},
   sections:[
     {id:"monde",label:"La Région",group:"Univers",color:"amber",badge:"Cadre temporel",badgeColor:"amber",title:"Pangée & Panthalassa",meta:"Plusieurs centaines de millions d'années avant notre ère",summary:"Le continent unique et l'océan primordial — cadre géographique et temporel du jeu.",content:[
       {type:"lead",text:"Il y a des centaines de millions d'années, existait **un seul continent** et **un seul océan**. La Pangée — terre primordiale brute et hostile — et Panthalassa, l'océan infini qui l'enveloppait de toutes parts."},
@@ -476,14 +530,32 @@ const DEFAULT_DATA = {
       {type:"h2",text:"La tension fondamentale"},
       {type:"callout",color:"amber",text:"L'opposition entre Groudon et Kyogre n'est pas une guerre. C'est une tension fondamentale qui *définit la planète*. Depuis des éons, un équilibre précaire — hostile mais stable — maintient la vie possible. Le jeu commence au moment où cet équilibre est rompu par l'arrivée de Deoxys."}
     ]},
+    {id:"biomes",label:"Les Biomes",group:"Univers",color:"teal",badge:"Exploration",badgeColor:"teal",title:"Les Biomes de la Pangée",meta:"Cinq zones climatiques · Météos distinctes · Pokémon Apex",summary:"La Pangée est découpée en biomes radicalement différents, chacun gouverné par une météo permanente et structuré autour d'un Pokémon Apex exclusif.",content:[
+      {type:"lead",text:"La Pangée n'est pas un monde uniforme. Sous la tension permanente entre Groudon et Kyogre, cinq zones climatiques majeures se sont formées — chacune avec ses propres conditions météorologiques, sa faune, et au sommet de sa chaîne alimentaire, un **Pokémon Apex** qui en structure l'équilibre."},
+      {type:"callout",color:"teal",text:"La météo de chaque biome est *permanente et active* — elle affecte directement le gameplay, les capacités des Pokémon et la difficulté des rencontres. Les Formes Primo de Groudon et Kyogre, ainsi que Méga-Rayquaza, peuvent temporairement **écraser** ces météos locales avec leurs talents Terre Finale, Mer Primaire et Souffle Delta."},
+      {type:"divider"},
+      {type:"h2",text:"Tableau des biomes"},
+      {type:"biome-table",items:[
+        {biome:"Zone Volcanique",zone:"Cœur de la Pangée",meteo:"☀️ Zénith",types:[["coral","Feu"],["green","Plante"]],signal:"Chaleur irradiante, sol fissuré",color:"coral"},
+        {biome:"Zone Côtière",zone:"Frontière Panthalassa",meteo:"🌧️ Pluie battante",types:[["blue","Eau"],["gray","Vol"]],signal:"Tempêtes permanentes, embruns",color:"blue"},
+        {biome:"Zone Aride",zone:"Intérieur continental",meteo:"🌪️ Tempête de sable",types:[["gray","Roche"],["amber","Sol"]],signal:"Cendres en suspension, visibilité réduite",color:"amber"},
+        {biome:"Zone Glaciaire",zone:"Hauts plateaux d'altitude",meteo:"❄️ Grêle",types:[["ice","Glace"],["purple","Spectre"]],signal:"Brume givrée, silence total",color:"ice"},
+        {biome:"Zone Cosmique",zone:"Site d'impact de la météorite",meteo:"⭐ Radiations X",types:[["purple","Cosmique"],["purple","Psy"]],signal:"Aurores au sol, perturbations électromagnétiques",color:"purple"}
+      ]},
+      {type:"divider"},
+      {type:"h2",text:"La Zone Cosmique — cas particulier"},
+      {type:"para",text:"La Zone Cosmique n'est pas accessible dès le début du jeu. Elle se révèle progressivement à mesure que le joueur suit les traces de Deoxys à travers les autres biomes. Sa météo — les *Radiations X* — est une nouveauté exclusive à ce jeu : une énergie cosmique concentrée, résidu direct de l'impact de la météorite, encore non disséminée dans les strates géologiques."},
+      {type:"mechanic",title:"Radiations X — météo exclusive",icon:"⭐",text:"Les Radiations X ne ressemblent à aucune météo connue dans le monde Pokémon moderne. Elles affectent prioritairement les capacités de type Cosmique et Psy. Les Pokémon qui y vivent ont absorbé l'énergie X directement — leur biologie porte la trace visible de cette exposition. C'est la seule zone du jeu où le type Cosmique existe à l'état naturel."},
+      {type:"callout",color:"purple",text:"Les Pokémon de la Zone Cosmique sont les seuls ancêtres directs des porteurs du Marqueur X. En les observant, Wollemi voit pour la première fois, de ses propres yeux, la bifurcation évolutive qu'il a passé vingt ans à reconstituer depuis un laboratoire."}
+    ]},
     {id:"cosmogonie",label:"Légendaires & Fabuleux",group:"Univers",color:"coral",badge:"Légendaires",badgeColor:"coral",title:"Légendaires & Fabuleux",meta:"Légendaires fondateurs · Le cycle éternel et ce qui le brise",summary:"Groudon, Kyogre, Rayquaza, Deoxys, Arceus, Regigigas — les six entités qui définissent et transforment le monde primordial.",content:[
       {type:"lead",text:"Six entités structurent l'équilibre du monde. Trois sont nées de la planète. Une vient du vide interstellaire. Une observe de partout et de nulle part. Une a été agglomérée par une intention trop grande pour rester sans forme."},
       {type:"h2",text:"Le cycle éternel — Groudon, Kyogre, Rayquaza"},
       {type:"legendary-grid",items:[
-        {name:"Groudon",imgKey:"groudon",sub:"L'Âme de la Pangée",types:[["coral","Feu"],["amber","Sol"]],color:"coral",text:"Groudon n'est pas né de la Pangée. Il **est** la Pangée. Dans sa Forme Primo, ses flancs sont couverts de fissures de lave, ses yeux comme deux cratères actifs. Il ne se déplace pas : il est le sol lui-même qui se soulève. C'est un **bâtisseur inconscient** — il crée la terre non par intention, mais parce que c'est sa nature."},
-        {name:"Kyogre",imgKey:"kyogre",sub:"L'Âme de Panthalassa",types:[["blue","Eau"]],color:"blue",text:"Kyogre est Panthalassa. Ses mouvements sont les courants océaniques, ses humeurs sont les tempêtes. Dans sa Forme Primo, ses motifs lumineux projettent des aurores sous-marines visibles depuis les côtes la nuit. Il ne cherche pas à détruire la terre — il cherche à *l'engloutir par nature*."},
-        {name:"Mega Rayquaza",imgKey:"rayquaza",sub:"L'Arbitre des Cieux",types:[["green","Dragon"],["gray","Vol"]],color:"green",text:"Rayquaza vit dans la stratosphère. Il appartient à *l'espace entre les deux* — ni Groudon ni Kyogre. À cette époque, il est en forme Méga permanente. Son combat avec la météorite a créé son **mikado organ**. Pour la première fois, l'arbitre est lui-même modifié par ce qu'il arbitre. Il n'est plus neutre."},
-        {name:"Deoxys ⭐",imgKey:"deoxys",sub:"L'Intrus Cosmique — Légendaire central",types:[["purple","Cosmique"]],color:"purple",text:"Virus interstellaire projeté vers la planète par un événement inconnu. Il combat Rayquaza dans la stratosphère, survit mutant, et s'écrase sur la Pangée. Ses quatre formes sont des états d'adaptation à un monde qu'il ne comprend pas encore. Il n'est pas mauvais — il est *radicalement étranger* à tout ce qui existe ici."}
+        {name:"Groudon",imgKey:"groudon",sub:"L'Âme de la Pangée",types:[["coral","Feu"],["amber","Sol"]],color:"coral",text:"Groudon n'est pas né de la Pangée. Il **est** la Pangée. Dans sa Forme Primo, ses flancs sont couverts de fissures de lave, ses yeux comme deux cratères actifs. Il ne se déplace pas : il est le sol lui-même qui se soulève. C'est un **bâtisseur inconscient** — il crée la terre non par intention, mais parce que c'est sa nature. Son talent Terre Finale impose un Soleil Intense absolu qui écrase toutes les météos locales."},
+        {name:"Kyogre",imgKey:"kyogre",sub:"L'Âme de Panthalassa",types:[["blue","Eau"]],color:"blue",text:"Kyogre est Panthalassa. Ses mouvements sont les courants océaniques, ses humeurs sont les tempêtes. Dans sa Forme Primo, ses motifs lumineux projettent des aurores sous-marines visibles depuis les côtes la nuit. Il ne cherche pas à détruire la terre — il cherche à *l'engloutir par nature*. Son talent Mer Primaire impose une Pluie Battante absolue qui écrase toutes les météos locales."},
+        {name:"Mega Rayquaza",imgKey:"rayquaza",sub:"L'Arbitre des Cieux",types:[["green","Dragon"],["gray","Vol"]],color:"green",text:"Rayquaza vit dans la stratosphère. Il appartient à *l'espace entre les deux* — ni Groudon ni Kyogre. À cette époque, il est en forme Méga permanente. Son combat avec la météorite a créé son **mikado organ**. Pour la première fois, l'arbitre est lui-même modifié par ce qu'il arbitre. Il n'est plus neutre. Son talent Souffle Delta *supprime toutes les météos* — y compris celles des biomes et des Formes Primo."},
+        {name:"Deoxys ⭐",imgKey:"deoxys",sub:"L'Intrus Cosmique — Légendaire central",types:[["purple","Cosmique"]],color:"purple",text:"Virus interstellaire projeté vers la planète par un événement inconnu. Il combat Rayquaza dans la stratosphère, survit mutant, et s'écrase sur la Pangée. Ses quatre formes sont des états d'adaptation à un monde qu'il ne comprend pas encore. Il n'est pas mauvais — il est *radicalement étranger* à tout ce qui existe ici. À l'époque moderne, il ne conserve que le type Psy — le type Cosmique ayant disparu avec le Syndrome X."}
       ]},
       {type:"callout",color:"coral",text:"Depuis des éons, le même schéma se répète : la tension monte entre Groudon et Kyogre, le conflit éclate en Formes Primo, Rayquaza descend et arbitre, l'équilibre revient. Arceus le sait. Il le tolère. Il lui fait confiance. **Ce système est brutal mais stable — il a toujours suffi.**"},
       {type:"mechanic",title:"Ce que Deoxys change",icon:"⭐",text:"L'arrivée de Deoxys introduit trois variables simultanées qu'aucun cycle précédent n'a connues : **Rayquaza est lui-même altéré** par l'énergie X. **L'énergie X introduit une fréquence** que le système planétaire ne peut pas absorber. **La vie sur la planète est désormais exposée** à une accumulation d'énergie potentiellement irréversible.",chain:["Tension habituelle","Conflit Formes Primo","Rayquaza arbitre","→ Mais cette fois : impossible"]},
@@ -498,6 +570,28 @@ const DEFAULT_DATA = {
       {type:"cards4",items:[{name:"Normale",tag:"Éveil",desc:"L'état d'observation. Deoxys tente de comprendre ce monde inconnu."},{name:"Attaque",tag:"Réaction",desc:"La réaction défensive face à l'agression. Instinct de survie activé."},{name:"Défense",tag:"Repli",desc:"Le repli, la survie. Deoxys se protège d'un monde hostile."},{name:"Vitesse",tag:"Exploration",desc:"La fuite, la cartographie. Deoxys explore ce qu'il ne comprend pas."}]},
       {type:"divider"},
       {type:"mechanic",title:"Slow Start — Se réveiller coûte quelque chose",icon:"◇",text:"Regigigas n'est pas un être vivant au sens plein. Chaque réveil lui coûte quelque chose de fondamental — comme si la matière devait se rappeler d'elle-même ce qu'elle est censée faire, sans avoir de mémoire pour s'en souvenir. Le **Slow Start** n'est pas une faiblesse mécanique. C'est la trace narrative de ce qu'il est : un golem qui doit se reconstituer à chaque fois qu'une volonté extérieure l'y force."}
+    ]},
+    {id:"apex",label:"Pokémon Apex",group:"Univers",color:"amber",badge:"Boss de biome",badgeColor:"amber",title:"Les Pokémon Apex",meta:"Espèces exclusives · Pivots d'écosystème · Un par biome",summary:"Au sommet de chaque biome, une espèce exclusive dont la présence structure tout l'écosystème. Ni Alpha, ni Légendaire — quelque chose d'autre.",content:[
+      {type:"lead",text:"Dans chaque biome de la Pangée, au-dessus des meutes et des Alphas, existe une espèce que les Pokémon locaux reconnaissent instinctivement comme antérieure à eux-mêmes. Ces espèces — les **Apex** — ne sont pas simplement des individus dominants. Elles sont les pivots biologiques autour desquels tout l'écosystème s'est construit."},
+      {type:"callout",color:"amber",text:"Les Pokémon Apex sont des **espèces exclusives à la Pangée** — elles n'ont aucun descendant connu dans le monde moderne. Elles ont disparu lors de la fragmentation du continent, emportant avec elles un niveau de l'écosystème que rien n'a remplacé. Les voir, c'est voir quelque chose que personne d'autre n'a jamais vu."},
+      {type:"divider"},
+      {type:"h2",text:"Signal distinctif — les marques blanches"},
+      {type:"mechanic",title:"Leucisme partiel",icon:"◈",text:"Chaque Apex porte des **zones de dépigmentation blanche** — leucisme partiel sur la peau, le pelage, les écailles ou les plumes. Ce n'est pas un effet artificiel : c'est la trace biologique de la survie et de la vieillesse extrême. Ces marques fonctionnent comme un signal social instinctif pour tous les Pokémon du biome — leur présence vide la zone avant même que l'Apex soit visible."},
+      {type:"mechanic",title:"Comportement",icon:"◎",text:"Un Apex n'est pas agressif par défaut. Il n'a pas besoin de l'être. Il observe d'abord — sa menace n'est pas de l'agressivité, c'est de l'indifférence calculée. C'est le silence qui précède qui dit au joueur qu'un Apex est proche : les Pokémon sauvages de la zone disparaissent avant que l'Apex soit visible."},
+      {type:"divider"},
+      {type:"h2",text:"Les cinq Apex — aperçu"},
+      {type:"cards3",items:[
+        {name:"Apex Volcanique",icon:"🌋",sub:"Zone Volcanique · Zénith",desc:"Types Feu/Plante. Espèce exclusive à concevoir. Règne sur la chaleur interne de la Pangée.",tagColor:"coral",tag:"À concevoir"},
+        {name:"Apex Côtier",icon:"🌊",sub:"Zone Côtière · Pluie battante",desc:"Types Eau/Vol. Espèce exclusive à concevoir. Maître des tempêtes permanentes de Panthalassa.",tagColor:"blue",tag:"À concevoir"},
+        {name:"Apex Aride",icon:"🌪️",sub:"Zone Aride · Tempête de sable",desc:"Types Roche/Sol. Espèce exclusive à concevoir. Seigneur du cœur sec du continent.",tagColor:"amber",tag:"À concevoir"},
+        {name:"Apex Glaciaire",icon:"❄️",sub:"Zone Glaciaire · Grêle",desc:"Types Glace/Spectre. Espèce exclusive à concevoir. Présence insaisissable des hauts plateaux.",tagColor:"ice",tag:"À concevoir"},
+        {name:"Apex Cosmique",icon:"⭐",sub:"Zone Cosmique · Radiations X",desc:"Types Cosmique/Psy. Clin d'œil à Deoxys moderne (uniquement Psy). L'espèce la plus imprégnée d'énergie X — ancêtre direct des porteurs du Marqueur X.",tagColor:"purple",tag:"À concevoir"}
+      ]},
+      {type:"divider"},
+      {type:"h2",text:"Loot & réapparition"},
+      {type:"mechanic",title:"Matériaux biologiques exclusifs",icon:"◆",text:"Vaincre un Apex rapporte des **matériaux biologiques impossibles à obtenir ailleurs** — une écaille, une plume, un fragment d'os d'une espèce éteinte depuis 200 millions d'années. Ces objets ont deux usages : rapportés à Wollemi et Élia au camp, ils font avancer la recherche et les dialogues. Conservés par le joueur, certains ont des effets passifs dans le biome concerné."},
+      {type:"mechanic",title:"Réapparition temporisée",icon:"◎",text:"Un Apex vaincu ne réapparaît pas immédiatement. Il revient après un délai lié à la progression narrative — souvent en post-game. Cette réapparition correspond à la reconstitution naturelle de la hiérarchie du biome. **Lors de la réapparition, l'Apex est capturable** — seul, sans phase préliminaire, mais avec le même set stratégique que lors du raid."},
+      {type:"callout",color:"amber",text:"Vaincre un Apex **déséquilibre temporairement le biome**. Les espèces qui dépendaient de lui pour la régulation de l'écosystème changent de comportement — proies plus nombreuses et agressives, certaines espèces disparaissent temporairement de la zone. Le joueur ressent le coût de ce qu'il a fait. L'équilibre se rétablit à la réapparition de l'Apex."}
     ]},
     {id:"starters",label:"Starters",group:"Univers",color:"green",badge:"Starters",badgeColor:"green",title:"Les Starters de Pangée",meta:"Les trois Pokémon de départ proposés par le Pr. Wollemi",summary:"Typhlosion, Serperior et Primarina dans leurs formes régionales — nées de l'équilibre entre Groudon et Kyogre.",content:[
       {type:"lead",text:"Nées de l'équilibre fragile entre Groudon et Kyogre, ces trois formes régionales sont les *manifestations vivantes* des conditions qui ont rendu la vie possible sur Pangée."},
@@ -520,17 +614,43 @@ const DEFAULT_DATA = {
       {type:"lead",text:"La communauté scientifique s'est accordée sur un récit fondateur. Ce récit est cohérent, documenté, et accepté. Ce qu'il n'explique pas, c'est **les humains**."},
       {type:"callout",color:"purple",text:"Les humains ne descendent pas de Mew. Wollemi appelle ce problème *la Divergence*. Dans l'ADN humain se trouvent des séquences dormantes qui n'appartiennent à aucune lignée évolutive terrestre identifiable — présentes chez tous les humains, absentes de tous les Pokémon."},
       {type:"mechanic",title:"La Source X — l'hypothèse non publiée",icon:"⭐",text:"Le Marqueur X partage avec l'ADN de Deoxys une logique structurelle que rien d'autre ne partage. L'hypothèse : Deoxys, ou un ancêtre cosmique de Deoxys, aurait introduit dans les premières formes de vie de la Pangée un matériau génétique exogène. Les humains seraient **le résultat d'une contamination cosmique accidentelle**."},
+      {type:"para",text:"Ce que Wollemi n'a pas encore formulé publiquement — mais que la Pangée va lui permettre de voir de ses propres yeux — c'est la suite logique de cette hypothèse. Le Marqueur X ne vient pas directement de Deoxys. Il vient d'une lignée Pokémon intermédiaire qui a absorbé l'énergie X lors de l'impact et en a fait quelque chose de durable. Ce chapitre complet est développé dans la page **Syndrome X**."},
       {type:"quote",text:"Les phénomènes extraordinaires de transformation que nous observons à travers les régions — Méga-Évolution, Formes Primo, Dynamax, Téracristallisation — ne sont pas des accidents locaux. Ils sont des expressions régionales d'une perméabilité planétaire globale. Cette perméabilité a une date. Elle a un cratère.",author:"Pr. Wollemi, notes personnelles"}
     ]},
+    {id:"syndrome-x",label:"Le Syndrome X",group:"Science",color:"poison",badge:"Lore fondateur",badgeColor:"poison",title:"Le Syndrome X — Naissance et disparition du type Cosmique",meta:"L'origine humaine complète · Le type Cosmique disparu · La boucle bouclée",summary:"Pourquoi le type Cosmique n'existe plus à l'époque moderne, et comment les humains descendent d'une lignée Pokémon irradiée par l'énergie X.",content:[
+      {type:"lead",text:"Quand la météorite de Deoxys s'est écrasée sur la Pangée, l'énergie X libérée s'est diffusée en ondes concentriques depuis le point d'impact. La quasi-totalité des organismes exposés directement ont péri. Quelques espèces ont survécu — **transformées**. Ce phénomène, le Professeur Wollemi l'appelle le **Syndrome X**."},
+      {type:"divider"},
+      {type:"h2",text:"Les trois caractéristiques du Syndrome X"},
+      {type:"mechanic",title:"Instabilité génétique productive",icon:"◈",text:"L'ADN des porteurs du Syndrome X mute à un rythme radicalement supérieur à la normale. Là où deux membres d'une même espèce Pokémon sont biologiquement quasi-identiques, deux porteurs du Syndrome X peuvent présenter des différences morphologiques, métaboliques et comportementales considérables. Cette variabilité est exactement ce que Wollemi observe chez les humains modernes — et qu'il n'observe chez aucune espèce Pokémon connue."},
+      {type:"mechanic",title:"Perméabilité aux énergies cosmiques — le type Cosmique",icon:"⭐",text:"Les porteurs développent des récepteurs primitifs à l'énergie X. Cette propriété se traduit en jeu par le **type Cosmique** : des capacités qui n'obéissent à aucune règle d'interaction terrestre, opérant sur un registre énergétique que rien d'autre ne reconnaît. C'est pourquoi les Pokémon de la Zone Cosmique ont ce type — ils vivent dans la zone de concentration maximale d'énergie X résiduelle."},
+      {type:"mechanic",title:"Proto-conscience sociale émergente",icon:"◎",text:"Les porteurs du Syndrome X développent des formes de communication et d'organisation collective plus complexes que leurs congénères non affectés. Pas de l'intelligence au sens humain — quelque chose d'intermédiaire, de difficile à catégoriser. C'est pourquoi les Apex de la Zone Cosmique ont des comportements que les autres Apex n'ont pas."},
+      {type:"divider"},
+      {type:"h2",text:"Pourquoi le type Cosmique a disparu"},
+      {type:"para",text:"Le Syndrome X est une bifurcation évolutive forcée — mais pas une bifurcation stable. L'énergie X ambiante autour du point d'impact, source de l'instabilité productive, se dissipe progressivement sur des dizaines de milliers d'années. Sans cette source continue, l'instabilité génétique qui était un avantage devient un désavantage : chaque génération produit des variants moins marqués que la précédente."},
+      {type:"callout",color:"poison",text:"Le type Cosmique ne s'est pas éteint brutalement. Il a fondu — génération après génération, l'expression phénotypique a diminué jusqu'à disparaître, tout en restant présent à l'état latent dans le génome. Ce résidu latent, c'est exactement ce que Wollemi appelle le **Marqueur X**."},
+      {type:"h2",text:"Les deux destins des lignées porteuses"},
+      {type:"cards2",items:[
+        {name:"L'extinction progressive",icon:"💀",desc:"Pour la majorité des lignées. L'instabilité génétique sans énergie X pour la soutenir produit trop de variants non-viables. Ces espèces s'éteignent en quelques centaines de milliers d'années — leurs fossiles ne ressemblent à aucune lignée connue et restent non-identifiés par la paléontologie moderne."},
+        {name:"La stabilisation divergente",icon:"🧬",desc:"Pour une lignée unique, dans des circonstances non entièrement élucidées par Wollemi. Au lieu de s'éteindre, cette lignée converge vers une stabilité inédite : elle conserve l'instabilité génétique productive comme caractéristique permanente, perd le type Cosmique comme expression active mais le garde comme Marqueur X dormant, et développe progressivement les caractéristiques humaines."}
+      ]},
+      {type:"divider"},
+      {type:"h2",text:"Les humains comme héritiers du Syndrome X"},
+      {type:"mechanic",title:"La variabilité génétique humaine",icon:"◆",text:"Ce qui était l'instabilité génétique productive du Syndrome X est devenu la **variabilité génétique humaine** — la caractéristique la plus distinctive de l'espèce. Deux Ossatueur sont quasi-identiques biologiquement. Deux humains peuvent présenter des différences génétiques, morphologiques, cognitives et comportementales considérables. Hérité directement du Syndrome X, stabilisé sur des centaines de millions d'années."},
+      {type:"mechanic",title:"Le Marqueur X comme vestige du type Cosmique",icon:"⭐",text:"Ce qui était le type Cosmique actif dans la biologie d'un Pokémon est devenu le Marqueur X : une empreinte dormante, sans expression phénotypique directe, présente dans chaque cellule humaine sans exception. L'énergie n'est plus active. Mais la trace structurelle dans le génome est indélébile."},
+      {type:"mechanic",title:"La cognition sociale humaine",icon:"◎",text:"Ce qui était la proto-conscience sociale émergente des porteurs du Syndrome X est devenu la **cognition sociale humaine** — la capacité à construire des structures sociales complexes, à transmettre des savoirs, à coopérer à des échelles qu'aucune espèce Pokémon n'atteint."},
+      {type:"callout",color:"purple",text:"Les humains ne descendent pas de Mew. Ils ne sont pas une création indépendante d'Arceus. Ils sont la **descendance stabilisée d'une lignée Pokémon porteuse du Syndrome X** — la seule qui n'a ni perdu ses caractéristiques cosmiques ni disparu, mais les a transformées en quelque chose de durable. Deoxys n'a pas créé les humains. Il a créé les conditions qui ont rendu leur existence possible. *Par accident.*"},
+      {type:"quote",text:"Pourquoi les humains ne sont-ils plus des Pokémon, même s'ils en descendent ? Parce que la divergence est trop ancienne et trop profonde. Une lignée qui a bifurqué il y a plusieurs centaines de millions d'années, sous une pression évolutive sans précédent, dans une direction que rien d'autre n'a prise, n'est plus la même espèce. Ce n'est pas différent de ce que la biologie terrestre réelle enseigne.",author:"Pr. Wollemi, notes non publiées — Source X"}
+    ]},
     {id:"fissure",label:"La Fissure",group:"Science",color:"teal",badge:"Mécanique centrale",badgeColor:"teal",title:"La Fissure",meta:"Le portail temporel · Dispositif d'activation",summary:"La connexion directe entre le présent et le sol de la Pangée au moment de l'impact.",content:[
-      {type:"lead",text:"En cartographiant la distribution des Éclats Premiers et en remontant la dérive des continents par modélisation géophysique, Wollemi et **Arjun Vasi** ont calculé le point d'impact originel — aujourd'hui sous **quatre mille mètres d'eau**, au fond de l'Atlantique."},
+      {type:"lead",text:"En cartographiant la distribution des Éclats Premiers et en remontant la dérive des continents par modélisation géophysique, Wollemi et **Theo Marrant** ont calculé le point d'impact originel — aujourd'hui sous **quatre mille mètres d'eau**, au fond de l'Atlantique."},
       {type:"mechanic",title:"Pas un voyage dans le temps",icon:"◎",text:"La Fissure n'est pas un voyage dans le temps au sens abstrait. Une reconnexion directe entre deux points de la **même planète** séparés par le temps : ici, aujourd'hui, et le sol de la Pangée au moment précis de l'impact de la météorite."},
-      {type:"mechanic",title:"Le seuil de résonance critique",icon:"✦",text:"Douze Éclats X réunis dans les bonnes conditions géométriques, activés par l'énergie calculée dans les modèles de **Arjun Vasi**, atteignent un seuil de résonance critique. À ce seuil, la résonance **rouvre** l'impact originel.",chain:["12 Éclats réunis","Configuration géométrique exacte","Seuil critique atteint","La Fissure s'ouvre"]},
+      {type:"mechanic",title:"Le seuil de résonance critique",icon:"✦",text:"Douze Éclats X réunis dans les bonnes conditions géométriques, activés par l'énergie calculée dans les modèles de **Theo Marrant**, atteignent un seuil de résonance critique. À ce seuil, la résonance **rouvre** l'impact originel.",chain:["12 Éclats réunis","Configuration géométrique exacte","Seuil critique atteint","La Fissure s'ouvre"]},
       {type:"callout",color:"teal",text:"**Le portail de retour ne s'ouvre que lorsque les douze Éclats sont réunis et activés simultanément.** Ce que personne n'anticipe : que certains membres utiliseront leur fragment comme levier de pouvoir le moment venu."}
     ]},
     {id:"protagoniste",label:"Le Protagoniste",group:"Personnages",color:"amber",badge:"Joueur",badgeColor:"amber",title:"Le Protagoniste",meta:"L'homme de terrain · Alter ego du joueur",summary:"Pas de diplôme, pas de titre. Une méthode que personne d'autre n'a.",content:[
       {type:"lead",text:"Tu n'es pas chercheur. Tu n'as jamais publié d'article. Ce que tu sais faire, c'est trouver des Pokémon que personne d'autre ne trouve."},
       {type:"mechanic",title:"La méthode",icon:"◎",text:"Tu sais lire un territoire, comprendre ce qu'un Pokémon sauvage tolère ou refuse, sentir le moment où l'approche est possible et celui où elle ne l'est pas encore. Tu construis de la confiance sans la forcer."},
+      {type:"mechanic",title:"La mission dans la Pangée",icon:"◆",text:"Wollemi te confie une mission claire : **explorer, cartographier, documenter**. Suivre la résonance des Éclats X pour localiser les traces de Deoxys. Identifier les biomes et leurs espèces. Rapporter au camp — données, observations, échantillons. Tu es l'interface entre le terrain hostile et l'équipe scientifique. C'est pour ça que tu es là."},
       {type:"divider"},
       {type:"h2",text:"Le choix du starter"},
       {type:"para",text:"Wollemi t'emmène dans la serre d'élevage du laboratoire. Il se tourne vers toi et dit simplement : *Je t'en dois un depuis longtemps. Prends celui avec lequel tu te sens.* C'est seulement après, Pokémon en main, qu'il t'explique tout le reste."},
@@ -551,22 +671,45 @@ const DEFAULT_DATA = {
       {type:"lead",text:"Chaque membre porte un Éclat X — sans lequel le groupe ne peut pas rentrer. Cliquer sur une carte pour voir le profil complet, les objectifs et l'arc narratif."},
       {type:"eclat-table"}
     ]},
-    {id:"mecanique",label:"Mécaniques de jeu",group:"Conception",color:"purple",badge:"Game Design",badgeColor:"purple",title:"Mécaniques de jeu",meta:"Systèmes de combat · Progression narrative · Types",summary:"Le type Cosmique, la mécanique des Éclats et les connexions entre phénomènes.",content:[
+    {id:"mecanique",label:"Mécaniques de jeu",group:"Conception",color:"purple",badge:"Game Design",badgeColor:"purple",title:"Mécaniques de jeu",meta:"Systèmes de combat · Progression narrative · Types",summary:"Le type Cosmique, la mécanique des Éclats, et les connexions entre phénomènes.",content:[
       {type:"lead",text:"Le cœur mécanique du jeu repose sur trois systèmes imbriqués : le **type Cosmique**, la **progression par Éclats**, et la **perméabilité planétaire** qui relie tous les phénomènes extraordinaires du monde Pokémon."},
-      {type:"mechanic",title:"Le type Cosmique",icon:"⭐",text:"Deoxys reçoit le **type Cosmique** — un type qui n'obéit pas aux règles des types terrestres, qui ne s'inscrit dans aucun des équilibres naturels établis par Groudon et Kyogre."},
+      {type:"mechanic",title:"Le type Cosmique",icon:"⭐",text:"Deoxys reçoit le **type Cosmique** — un type qui n'obéit pas aux règles des types terrestres. À l'époque de la Pangée, ce type existe aussi chez les Pokémon de la Zone Cosmique, porteurs du Syndrome X. Il a disparu à l'époque moderne — voir la page *Syndrome X* pour l'explication complète."},
       {type:"mechanic",title:"8 Éclats = 8 arcs narratifs",icon:"◆",text:"Chaque Éclat X est détenu par un membre de l'expédition. Les récupérer n'est pas une suite de combats — c'est une suite de *confrontations humaines*. Chaque arc révèle pourquoi ce personnage a choisi de prioriser ses propres objectifs sur la cohésion du groupe.",chain:["Trouver le membre","Comprendre son arc","Confrontation","Récupérer l'Éclat"]},
       {type:"divider"},
-      {type:"h2",text:"Types des expéditeurs"},
+      {type:"h2",text:"Types des expéditeurs — aucun overlap avec les Apex"},
+      {type:"para",text:"Les types des 8 membres d'expédition ont été choisis pour ne jamais recouper les types des Pokémon Apex rencontrés dans les biomes. Cette décision garantit une diversité totale des mécaniques adverses tout au long du jeu."},
       {type:"type-grid",items:[
-        {name:"Hana",type:"Plante",color:"green"},
+        {name:"Hana",type:"Poison",color:"poison"},
         {name:"Vael",type:"Acier",color:"steel"},
         {name:"Solano",type:"Normal",color:"gray"},
         {name:"Marrant",type:"Électrik",color:"amber"},
         {name:"Carvalho",type:"Fée",color:"pink"},
         {name:"Ashida",type:"Combat",color:"coral"},
         {name:"Shore",type:"Dragon",color:"teal"},
-        {name:"Vasi",type:"Spectre",color:"purple"}
+        {name:"Vasi",type:"Ténèbre",color:"dark"}
       ]}
+    ]},
+    {id:"hierarchie",label:"Hiérarchie Sauvage",group:"Conception",color:"green",badge:"Game Design",badgeColor:"green",title:"Hiérarchie Sauvage — Sauvage / Alpha / Apex",meta:"Trois niveaux de rencontre · Formats de combat distincts · Progression d'exploration",summary:"Trois rangs distincts structurent la faune de la Pangée, chacun avec son format de combat, son signal visuel et ses mécaniques propres.",content:[
+      {type:"lead",text:"La Pangée n'a pas de dresseurs. Ce qui donne du rythme à l'exploration, c'est la **hiérarchie vivante du monde sauvage** — trois niveaux de rencontre clairement distincts, chacun avec un format de combat différent, un signal visuel immédiatement lisible, et une logique propre."},
+      {type:"h2",text:"Vue d'ensemble"},
+      {type:"hierarchie-table"},
+      {type:"divider"},
+      {type:"h2",text:"Sauvage — l'unité de base"},
+      {type:"mechanic",title:"Signal visuel",icon:"◇",text:"Aucun marqueur particulier. Se lisent par leur comportement naturel — certains fuient, d'autres chargent selon l'espèce. Le joueur apprend à les lire par l'observation."},
+      {type:"mechanic",title:"Combat",icon:"◈",text:"Combat Pokémon classique, un contre un ou en horde selon l'espèce. Pas de mécanique spéciale. La difficulté vient du niveau et du type, pas de la structure."},
+      {type:"mechanic",title:"Capture & Loot",icon:"◉",text:"Capture standard — affaiblir, lancer une Poké Ball. Loot : objets courants propres à l'espèce. Certaines espèces sont approchables en furtif sans combat préalable."},
+      {type:"divider"},
+      {type:"h2",text:"Alpha — le chef de meute"},
+      {type:"mechanic",title:"Signal visuel",icon:"◇",text:"**Yeux rouges** — signal de dominance et d'agressivité. Taille supérieure à la normale. Charge immédiatement à vue. Toujours entouré de Pokémon de sa propre famille évolutive."},
+      {type:"mechanic",title:"Combat",icon:"◈",text:"**Horde puis boss.** La meute de même espèce engage en premier. L'Alpha reste en retrait jusqu'à ce que ses congénères soient dispersés ou vaincus, puis entre au combat seul. Deux temps naturels, pas de phases formelles."},
+      {type:"mechanic",title:"Capture & Loot",icon:"◉",text:"Capture difficile mais possible. Taux réduit, stats supérieures, niveau élevé. Loot : objets rares de l'espèce à taux augmenté, matériaux d'évolution, Bonbons Exp. L'Alpha revient à son emplacement fixe après défaite."},
+      {type:"divider"},
+      {type:"h2",text:"Apex — le pivot d'écosystème"},
+      {type:"mechanic",title:"Signal visuel",icon:"◇",text:"**Marques blanches** — leucisme partiel sur la peau, le pelage, les écailles ou les plumes. Signal biologique instinctif pour toute la faune locale. La zone se vide avant même que l'Apex soit visible. Il n'a pas besoin de charger pour imposer sa présence."},
+      {type:"mechanic",title:"Combat — structure Raid",icon:"◈",text:"Combat en **deux phases distinctes**. Phase 1 : trois Pokémon emblématiques du biome, chacun avec un set stratégique, en séquence. L'Apex dirige depuis l'arrière mais reste hors d'atteinte. Phase 2 : l'Apex seul entre au combat une fois ses alliés dispersés — espèce exclusive, patterns inédits, joueur entamé par la phase 1. La difficulté est cumulative, pas artificielle.",chain:["Minion 1","Minion 2","Minion 3","Boss Apex"]},
+      {type:"mechanic",title:"Les 3 minions — variété stratégique",icon:"◆",text:"Les trois minions ne suivent pas toujours le même schéma. Selon l'Apex : un trio asymétrique (rapide/tank/attaquant), un trio synergique (set pensé pour fonctionner ensemble mais affronté séparément), un trio narratif (du plus commun au plus rare de la zone — le raid devient une lecture du biome), ou un trio à inversion (le plus dur n'est pas le dernier). Chaque minion a une identité lisible en un tour."},
+      {type:"mechanic",title:"Capture & Loot",icon:"◉",text:"**Incapturable lors du raid.** Loot : matériaux biologiques exclusifs à l'espèce Apex, objets de craft uniques introuvables ailleurs, données utilisables par Wollemi et Élia au camp (avancement de la recherche). **Réapparition temporisée** : après un délai lié à la progression narrative, l'Apex revient seul dans le biome — capturable dans cette configuration, avec le même set stratégique."},
+      {type:"callout",color:"green",text:"Vaincre un Apex déséquilibre temporairement le biome. Les proies habituelles de l'Apex deviennent plus nombreuses et plus agressives. Certaines espèces disparaissent temporairement. L'équilibre se rétablit à la réapparition de l'Apex — signal narratif visible du coût de chaque victoire."}
     ]}
   ],
   expediteurs:[
@@ -583,10 +726,10 @@ const DEFAULT_DATA = {
     {num:"×1",name:"Le Protagoniste",role:"L'homme de terrain",type:null,color:"amber",status:"secure",
      imgUrl:`${BASE}/Protagoniste.png`,
      desc:"Pas de diplôme, pas de titre. Ce qu'il sait faire, c'est trouver des Pokémon que personne d'autre ne trouve — et établir avec eux une relation suffisamment stable pour les ramener vivants.",
-     objective:"Servir d'interface entre les Pokémon de la Pangée et l'équipe. Construire du contact sans forcer. Travailler au rythme de l'autre."},
-    {num:"×1",name:"Dr. Sekine Hana",role:"Biologiste / Médecin",type:"Plante",color:"green",status:"recover",
+     objective:"Explorer et cartographier la Pangée. Suivre la résonance des Éclats X pour localiser les traces de Deoxys. Rapporter données, observations et échantillons biologiques à Wollemi et Élia."},
+    {num:"×1",name:"Dr. Sekine Hana",role:"Biologiste / Médecin",type:"Poison",color:"poison",status:"recover",
      imgUrl:`${BASE}/Dr.%20Sekine%20Hana.png`,
-     desc:"Biologiste spécialisée en biologie primitive et biochimie environnementale, également médecin attitrée de l'expédition. Brillante et instable face aux opportunités trop grandes.",
+     desc:"Biologiste spécialisée en biologie primitive et biochimie environnementale, également médecin attitrée de l'expédition. Son type Poison reflète sa spécialité : les organismes primitifs, toxiques, chimiquement complexes — la biologie comme force qui colonise tout espace disponible sans se soucier des limites. Brillante et instable face aux opportunités trop grandes.",
      objective:"Documentation biologique des écosystèmes primitifs de la Pangée. Soins médicaux de l'équipe.",
      arc:"Face aux écosystèmes primitifs intacts — des espèces éteintes depuis 200 millions d'années — elle perd tout sens éthique et des priorités. Commence à prélever des échantillons sans autorisation, s'isole du groupe pour des observations non planifiées. Refuse d'abandonner un site lors d'une alerte de sécurité.",
      trigger:"Incapacité à hiérarchiser face à l'unique"},
@@ -626,9 +769,9 @@ const DEFAULT_DATA = {
      objective:"Officiel : financement et logistique. Réel : être là pour voir. Et peut-être posséder.",
      arc:"A passé sa vie à posséder des choses uniques. La Pangée est remplie de choses uniques. Et Deoxys est la chose la plus unique que quiconque ait jamais approchée. L'idée de le capturer germe lentement, sans se formuler — elle existe juste, dans ses décisions et ses déplacements.",
      trigger:"Posséder comme réflexe identitaire"},
-    {num:"×1",name:"Arjun Vasi",role:"Artiste / Documentariste",type:"Spectre",color:"purple",status:"recover",
+    {num:"×1",name:"Arjun Vasi",role:"Artiste / Documentariste",type:"Ténèbre",color:"dark",status:"recover",
      imgUrl:`${BASE}/Arjun%20Vasi.png`,
-     desc:"Peintre, écrivain, philosophe selon les jours. Invité personnellement par Shore contre l'avis de Wollemi. Son rôle : témoigner, pas analyser. Un œil sans grille de lecture.",
+     desc:"Peintre, écrivain, philosophe selon les jours. Invité personnellement par Shore contre l'avis de Wollemi. Son art est réaliste et n'a pas peur de montrer la cruauté du monde — c'est précisément pour ça qu'il est là. Le type Ténèbre ne dit pas le mal : il dit l'absence de filtre, l'instinct de regarder ce que les autres préfèrent ne pas voir.",
      objective:"Documenter ce que ça fait d'être là — pas ce que ça signifie. Ses carnets accumulent des croquis naturalistes d'une précision remarquable et des pages de réflexions sur ce que c'est qu'être humain dans un monde qui existait avant l'humanité.",
      arc:"Sa dissolution est progressive. Il commence à disparaître seul dans la Pangée pour des périodes de plus en plus longues — non pas pour accomplir quelque chose, mais parce que ce qu'il voit le consume d'une manière qu'il n'essaie pas de contenir. Pour le retrouver, il faut d'abord comprendre ce qu'il cherchait.",
      trigger:"L'observateur consumé par ce qu'il observe"}
