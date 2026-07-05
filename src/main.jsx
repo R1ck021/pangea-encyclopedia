@@ -75,6 +75,34 @@ function LegendaryGrid({items}){
   </div>
 }
 
+function ZoneGrid({items}){
+  const rubrics=[['◉','Visuel','visuel'],['◈','Principes','principes'],['◇','Mécaniques','meca'],['◎','Écosystème','faune']]
+  return<div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:14}}>
+    {items.map((it,i)=>{
+      const c=D[it.color]||D.gray
+      return<div key={i} style={{background:m.bgS,border:`1px solid ${m.bd}`,borderTop:`2.5px solid ${c.m}`,borderRadius:10,overflow:'hidden',display:'flex',flexDirection:'column'}}>
+        <div style={{background:c.l,padding:'9px 13px',borderBottom:`1px solid ${c.b}`}}>
+          <div style={{display:'flex',alignItems:'baseline',justifyContent:'space-between',gap:8,marginBottom:it.types?6:0}}>
+            <span style={{fontSize:13.5,fontWeight:700,color:c.d}}>{it.name}</span>
+            {it.meteo&&<span style={{fontSize:10,color:c.d,opacity:0.85,whiteSpace:'nowrap'}}>{it.meteo}</span>}
+          </div>
+          {it.types&&<div>{it.types.map(([tc,tl],j)=><Tag key={j} color={tc} label={tl} sm/>)}</div>}
+          {it.tag&&!it.types&&<span style={{fontSize:10,color:c.d,opacity:0.75,fontStyle:'italic'}}>{it.tag}</span>}
+        </div>
+        <div style={{padding:'4px 13px 11px'}}>
+          {rubrics.map(([ic,lb,key])=>it[key]?<div key={key} style={{display:'flex',gap:8,padding:'7px 0',borderBottom:key!=='faune'?`1px solid ${m.bd}`:'none'}}>
+            <span style={{fontSize:9,color:c.m,marginTop:3,flexShrink:0,width:9,textAlign:'center'}}>{ic}</span>
+            <div style={{flex:1}}>
+              <div style={{fontSize:9,fontWeight:600,color:m.txM,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:1}}>{lb}</div>
+              <div style={{fontSize:12,lineHeight:1.5,color:m.txS}}><Txt t={it[key]}/></div>
+            </div>
+          </div>:null)}
+        </div>
+      </div>
+    })}
+  </div>
+}
+
 function BiomeTable({items,typesHeader}){
   return<div style={{border:`1px solid ${m.bd}`,borderRadius:10,overflow:'hidden',marginBottom:14}}>
     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr 1fr',background:m.bgM,borderBottom:`1px solid ${m.bd}`}}>
@@ -275,6 +303,7 @@ function renderBlock(block,i,data){
     case'cards2':return<Cards key={i} items={block.items} cols={2}/>
     case'cards4':return<Cards key={i} items={block.items} cols={2}/>
     case'legendary-grid':return<LegendaryGrid key={i} items={block.items}/>
+    case'zone-grid':return<ZoneGrid key={i} items={block.items}/>
     case'starter-block':return<StarterBlock key={i} data={block.data}/>
     case'starter-choice':return<StarterChoice key={i} items={block.items}/>
     case'persons-grid':return<div key={i}>{block.items.map((p,j)=><PersonCard key={j} person={p}/>)}</div>
@@ -425,53 +454,23 @@ const DEFAULT_DATA={
     ]},
     {id:"zones",label:"Les Zones",group:"R\u00e9gion",color:"green",badge:"G\u00e9ographie",badgeColor:"green",title:"Les Zones de la Pang\u00e9e",meta:"9 zones \u00b7 1 de d\u00e9part \u00b7 5 Apex \u00b7 3 l\u00e9gendaires",summary:"Une zone de d\u00e9part sans climat, cinq biomes Apex avec m\u00e9t\u00e9o permanente, et trois territoires l\u00e9gendaires accessibles t\u00f4t mais capturables tard.",content:[
       {type:"lead",text:"La Pang\u00e9e se parcourt en neuf zones. La **Plaine** sert de camp de base \u2014 sans climat, sans menace forte. Cinq **biomes Apex** portent chacun une m\u00e9t\u00e9o permanente et un boss d'\u00e9cosyst\u00e8me unique. Trois **zones l\u00e9gendaires** abritent les gardiens primordiaux : explorables d\u00e8s le jeu principal, mais leurs occupants ne deviennent capturables qu'en post-game."},
-      {type:"divider"},
-      {type:"h2",text:"Plaine \u2014 zone de d\u00e9part"},
-      {type:"para",text:"**Visuel.** Plaines douces et bois clairsem\u00e9s, relief simple, lumi\u00e8re naturelle sans exc\u00e8s. Aucun ph\u00e9nom\u00e8ne m\u00e9t\u00e9o particulier \u2014 pas de temp\u00eate, pas de radiations, pas de gel, pas de chaleur. Le d\u00e9cor le plus lisible du jeu, sans m\u00e9canique cach\u00e9e ni double lecture."},
-      {type:"para",text:"**Principes cl\u00e9s.** La zone de d\u00e9part classique \u2014 celle o\u00f9 le joueur apprend les r\u00e8gles avant que la plan\u00e8te ne commence \u00e0 les briser. C'est ici que l'\u00e9quipe installe son camp apr\u00e8s la travers\u00e9e de la Fissure."},
-      {type:"mechanic",title:"M\u00e9caniques",icon:"\u25ce",text:"Rencontres Sauvages uniquement, aucune m\u00e9canique Alpha ni Apex. Zone tutoriel : premi\u00e8res captures, premiers combats, pr\u00e9sentation des syst\u00e8mes de base. Fonction de hub : retour rapide, point de rassemblement de l'\u00e9quipe."},
-      {type:"para",text:"**\u00c9cosyst\u00e8me & faune.** Des esp\u00e8ces communes et calmes, sans sp\u00e9cialisation \u00e0 un extr\u00eame \u2014 le point de r\u00e9f\u00e9rence tranquille avant de d\u00e9couvrir \u00e0 quel point le reste de la plan\u00e8te ne l'est pas."},
-      {type:"divider"},
-      {type:"h2",text:"\u2600\ufe0f \u00c9quatorial \u2014 Feu/Plante \u00b7 Z\u00e9nith"},
-      {type:"para",text:"**Visuel.** Une savane bois\u00e9e, chaude et s\u00e8che \u2014 pas de jungle d\u00e9tremp\u00e9e. Arbres r\u00e9sineux dispers\u00e9s plut\u00f4t qu'une canop\u00e9e ferm\u00e9e, hautes herbes dor\u00e9es qui craquent sous la chaleur, \u00e9corces qui suintent de r\u00e9sine. Le soleil au z\u00e9nith frappe directement presque partout \u2014 paysage ouvert, pas un sous-bois sombre. Quelques poches de fumerolles ponctuent le sol, rappel discret du terrain volcanique fertile en dessous. Palette dor\u00e9 et vert olive, accents orange et rouge sur les \u00e9corces et fleurs r\u00e9sineuses."},
-      {type:"para",text:"**Principes cl\u00e9s.** Une jungle humide et un cycle de combustion naturel s'entendent mal biologiquement : c'est l'humidit\u00e9 qui prot\u00e8ge les for\u00eats tropicales du feu. Les vrais \u00e9cosyst\u00e8mes pyrophytes \u2014 garrigue, savane est-africaine, scl\u00e9rophylles australiennes \u2014 sont secs et ensoleill\u00e9s. La savane bois\u00e9e r\u00e8gle ce probl\u00e8me tout en gardant \u00ab \u00c9quatorial \u00bb pertinent : les savanes est-africaines sont sur l'\u00e9quateur, et pourtant s\u00e8ches. Le feu ici reste un m\u00e9canisme v\u00e9g\u00e9tal, pas min\u00e9ral \u2014 ce qui distingue nettement la zone de Typhlosion de Pang\u00e9e (basalte, lave) et de Serperior de Pang\u00e9e (\u00e9corce ancienne, v\u00e9n\u00e9rable)."},
-      {type:"mechanic",title:"M\u00e9caniques",icon:"\u25c8",text:"**Phase 1 (minions)** : combat dans les herbes hautes, terrain ouvert, couvert v\u00e9g\u00e9tal dense au ras du sol. **Transition Apex** : un feu de savane court sur l'herbe s\u00e8che \u00e0 mesure que la chaleur du z\u00e9nith monte. **Rencontres conditionnelles** : certaines esp\u00e8ces n'apparaissent qu'apr\u00e8s le passage d'un feu \u2014 \u00e9cho de la s\u00e9rotinie r\u00e9elle (graines qui ne s'ouvrent qu'au contact du feu)."},
-      {type:"para",text:"**\u00c9cosyst\u00e8me & faune.** Dominante Plante, minorit\u00e9 Feu/Plante adapt\u00e9e au cycle de combustion saisonnier. Herbivores de terrain ouvert, arbres r\u00e9sineux qui s'enflamment et se ress\u00e8ment. St\u00e9gagon (Dragon, fossile complet de Galar) fait partie des esp\u00e8ces qu'on peut y croiser, aux c\u00f4t\u00e9s d'une faune plus commune."},
-      {type:"divider"},
-      {type:"h2",text:"\ud83c\udf27\ufe0f C\u00f4tier \u2014 Eau/Vol \u00b7 Pluie battante"},
-      {type:"para",text:"**Visuel.** Des falaises rong\u00e9es par des vagues sans fin, des embruns permanents qui brouillent l'horizon, un ciel bas travers\u00e9 d'\u00e9clairs. La ligne de front visible entre Groudon et Kyogre \u2014 la zone de guerre permanente du lore, r\u00e9duite \u00e0 l'\u00e9chelle d'un biome."},
-      {type:"para",text:"**Principes cl\u00e9s.** Contrairement \u00e0 Haute-Mer (oc\u00e9an pur, sans terre), le C\u00f4tier est d\u00e9fini par la collision \u2014 terre et mer qui se disputent chaque centim\u00e8tre. Un biome de bord, de friction constante, pas d'immersion totale."},
-      {type:"mechanic",title:"M\u00e9caniques",icon:"\u25c7",text:"Raid en deux registres altern\u00e9s : les minions patrouillent en vol au-dessus des falaises pendant que l'Apex reste immerg\u00e9 ; il n'\u00e9merge qu'au pic de la temp\u00eate. M\u00e9t\u00e9o dynamique : le vent violent peut perturber certaines attaques Vol adverses, for\u00e7ant une lecture tactique du moment d'engagement."},
-      {type:"para",text:"**\u00c9cosyst\u00e8me & faune.** Oiseaux-poissons primitifs nichant en colonies sur les falaises, adapt\u00e9s \u00e0 la double contrainte air/eau. Hydraos (Eau, fossile complet de Galar) fait partie de la faune des criques en contrebas, aux c\u00f4t\u00e9s d'autres esp\u00e8ces adapt\u00e9es \u00e0 la houle."},
-      {type:"divider"},
-      {type:"h2",text:"\ud83c\udf2a\ufe0f Aride \u2014 Roche/Sol \u00b7 Temp\u00eate de sable"},
-      {type:"para",text:"**Visuel.** Canyons \u00e9rod\u00e9s, dunes rouges, et \u2014 d\u00e9tail qui ancre la zone dans le lore des \u00c9clats X \u2014 des fragments de m\u00e9t\u00e9orite qui affleurent par endroits apr\u00e8s des si\u00e8cles d'\u00e9rosion."},
-      {type:"para",text:"**Principes cl\u00e9s.** Le biome visuellement le plus ancien du jeu, et le seul qui fait un lien direct et explicite avec les \u00c9clats X eux-m\u00eames plut\u00f4t qu'avec leurs cons\u00e9quences. Une opportunit\u00e9 claire d'easter egg ou de mini-objet \u00e0 trouver sur le terrain."},
-      {type:"mechanic",title:"M\u00e9caniques",icon:"\u25c8",text:"La temp\u00eate de sable r\u00e9duit la visibilit\u00e9 et favorise l'approche furtive (bien adapt\u00e9e au principe des Sauvages). Possible mini-jeu de fouille arch\u00e9ologique, coh\u00e9rent avec la forte densit\u00e9 de fossiles de la zone."},
-      {type:"para",text:"**\u00c9cosyst\u00e8me & faune.** Zone la plus riche en fossiles vivants. Charkos y trouve naturellement sa place (seule exception mono-Roche conserv\u00e9e), aux c\u00f4t\u00e9s d'autres lign\u00e9es fossiles. Galvaptor (\u00c9lectrik, fossile complet de Galar) est actif pendant les temp\u00eates \u2014 l'\u00e9lectricit\u00e9 statique du sable en mouvement est un ph\u00e9nom\u00e8ne r\u00e9el qui justifie sa pr\u00e9sence ici."},
-      {type:"divider"},
-      {type:"h2",text:"\u2744\ufe0f Glaciaire \u2014 Glace/Spectre \u00b7 Gr\u00eale"},
-      {type:"para",text:"**Visuel.** Banquise primitive, grottes de glace bleut\u00e9e, brouillard qui efface les rep\u00e8res, aurores traversant le ciel."},
-      {type:"para",text:"**Principes cl\u00e9s.** Un froid absolu o\u00f9 le blanc et le brouillard effacent les rep\u00e8res aussi s\u00fbrement que l'obscurit\u00e9 \u2014 la survie s'y joue autant sur l'orientation que sur la r\u00e9sistance au gel."},
-      {type:"mechanic",title:"M\u00e9caniques",icon:"\u25c7",text:"L'Apex peut dispara\u00eetre temporairement dans le blizzard pendant le combat (coh\u00e9rent avec son typage Spectre), for\u00e7ant le joueur \u00e0 anticiper sa r\u00e9apparition plut\u00f4t qu'\u00e0 r\u00e9agir en continu."},
-      {type:"para",text:"**\u00c9cosyst\u00e8me & faune.** Des esp\u00e8ces adapt\u00e9es au gel et \u00e0 la faible visibilit\u00e9, certaines bioluminescentes pour se rep\u00e9rer dans le brouillard permanent. Naglagla (Glace, fossile complet de Galar) y c\u00f4toie d'autres lign\u00e9es locales, sans dominer le biome \u00e0 lui seul."},
-      {type:"divider"},
-      {type:"h2",text:"\u2b50 Cosmique \u2014 Cosmique/Psy \u00b7 Radiations X"},
-      {type:"para",text:"**Visuel.** Un crat\u00e8re r\u00e9siduel, de la roche vitrifi\u00e9e par un impact ancien, une aurore anormale violette et verte qui ne correspond \u00e0 aucun ph\u00e9nom\u00e8ne atmosph\u00e9rique connu du reste de la plan\u00e8te. Silence quasi total."},
-      {type:"para",text:"**Principes cl\u00e9s.** Seul biome o\u00f9 le Marqueur X est activement perceptible plut\u00f4t que dormant. Le secondaire Psy de l'Apex fait \u00e9cho au Deoxys moderne, qui a perdu son type Cosmique au fil des \u00e8res \u2014 la trace la plus proche, dans le jeu principal, de ce que Deoxys repr\u00e9sente r\u00e9ellement."},
-      {type:"mechanic",title:"M\u00e9caniques",icon:"\u25c6",text:"Zone qui perturbe l\u00e9g\u00e8rement les m\u00e9caniques standards (\u00e0 d\u00e9finir : parasitage de capacit\u00e9s, instabilit\u00e9 de terrain). Se rouvre en post-game pour la rencontre avec Deoxys \u2014 seule zone du jeu \u00e0 double usage narratif (Apex en jeu principal, l\u00e9gendaire central en post-game)."},
-      {type:"para",text:"**\u00c9cosyst\u00e8me & faune.** Peu d'esp\u00e8ces, discr\u00e8tes, portant de l\u00e9g\u00e8res mutations li\u00e9es \u00e0 l'exposition aux radiations X \u2014 raret\u00e9 et \u00e9tranget\u00e9 plut\u00f4t que densit\u00e9."},
-      {type:"divider"},
-      {type:"h2",text:"Zones L\u00e9gendaires \u2014 accessibles t\u00f4t, capturables tard"},
-      {type:"para",text:"Trois zones ne suivent pas la logique des cinq biomes Apex : ce sont les territoires des gardiens primordiaux. Explorables d\u00e8s le jeu principal \u2014 le joueur peut y affronter la faune sauvage et croiser les gardiens \u2014 mais Groudon Primo, Kyogre Primo et Mega Rayquaza ne deviennent **capturables qu'en post-game**."},
-      {type:"biome-table",typesHeader:"Types",items:[
-        {biome:"Volcan",zone:"Caldeira active \u00b7 Groudon Primo",meteo:"\ud83c\udf0b S\u00e9cheresse totale",types:[["coral","Feu"],["amber","Sol"]],signal:"Coul\u00e9es de lave permanentes, air qui tremble en mirage",color:"coral"},
-        {biome:"Haute-Mer",zone:"Oc\u00e9an ouvert \u00b7 Kyogre Primo",meteo:"\ud83c\udf0a D\u00e9luge",types:[["blue","Eau"]],signal:"Aucune terre visible, temp\u00eates perp\u00e9tuelles",color:"blue"},
-        {biome:"Pilier C\u00e9leste",zone:"Sommet stratosph\u00e9rique \u00b7 Mega Rayquaza",meteo:"\ud83d\udca8 Courant d'altitude",types:[["teal","Dragon"],["gray","Vol"]],signal:"Vents extr\u00eames, vue quasi stratosph\u00e9rique",color:"teal"}
+      {type:"h2",text:"Jeu principal \u2014 1 d\u00e9part + 5 biomes Apex"},
+      {type:"zone-grid",items:[
+        {name:"Plaine",meteo:"Aucun climat",tag:"Zone de d\u00e9part",color:"gray",visuel:"Plaines douces, bois clairsem\u00e9s, relief simple. Aucun ph\u00e9nom\u00e8ne m\u00e9t\u00e9o \u2014 le d\u00e9cor le plus lisible du jeu.",principes:"Camp de base install\u00e9 apr\u00e8s la Fissure. Le joueur y apprend les r\u00e8gles avant que la plan\u00e8te ne les brise.",meca:"Rencontres Sauvages uniquement, aucun Alpha ni Apex. Zone tutoriel et hub de retour.",faune:"Esp\u00e8ces communes et calmes, sans sp\u00e9cialisation \u2014 le point de r\u00e9f\u00e9rence tranquille."},
+        {name:"\u00c9quatorial",meteo:"\u2600\ufe0f Z\u00e9nith",types:[["coral","Feu"],["green","Plante"]],color:"coral",visuel:"Savane bois\u00e9e chaude et s\u00e8che, arbres r\u00e9sineux dispers\u00e9s, hautes herbes dor\u00e9es. Soleil vertical, paysage ouvert.",principes:"Le feu est un m\u00e9canisme **v\u00e9g\u00e9tal** (pyrophytie), pas min\u00e9ral \u2014 ce qui distingue la zone de Typhlosion et de Serperior.",meca:"Transition Apex : un feu de savane court sur l'herbe s\u00e8che. Certaines esp\u00e8ces n'apparaissent qu'apr\u00e8s le passage du feu.",faune:"Dominante Plante, herbivores de terrain ouvert. St\u00e9gagon (fossile Galar) parmi les esp\u00e8ces crois\u00e9es."},
+        {name:"C\u00f4tier",meteo:"\ud83c\udf27\ufe0f Pluie battante",types:[["blue","Eau"],["gray","Vol"]],color:"blue",visuel:"Falaises rong\u00e9es par les vagues, embruns permanents, ciel bas travers\u00e9 d'\u00e9clairs. La ligne de front Groudon/Kyogre.",principes:"D\u00e9fini par la collision terre/mer \u2014 un biome de bord, pas d'immersion totale (\u00e0 distinguer de Haute-Mer).",meca:"Minions en vol au-dessus des falaises, Apex immerg\u00e9 jusqu'au pic de temp\u00eate. Le vent perturbe les attaques Vol.",faune:"Oiseaux-poissons en colonies sur les falaises. Hydraos (fossile Galar) dans les criques en contrebas."},
+        {name:"Aride",meteo:"\ud83c\udf2a\ufe0f Temp\u00eate de sable",types:[["gray","Roche"],["amber","Sol"]],color:"amber",visuel:"Canyons \u00e9rod\u00e9s, dunes rouges, fragments de m\u00e9t\u00e9orite affleurants \u2014 le biome le plus ancien du jeu.",principes:"Seul biome \u00e0 lier directement les \u00c9clats X eux-m\u00eames (pas leurs cons\u00e9quences). Potentiel easter egg terrain.",meca:"La temp\u00eate r\u00e9duit la visibilit\u00e9 et favorise l'approche furtive. Possible mini-jeu de fouille.",faune:"La plus riche en fossiles vivants. Charkos (mono-Roche conserv\u00e9), Galvaptor (fossile Galar) actif dans les temp\u00eates."},
+        {name:"Glaciaire",meteo:"\u2744\ufe0f Gr\u00eale",types:[["ice","Glace"],["purple","Spectre"]],color:"ice",visuel:"Banquise primitive, grottes de glace bleut\u00e9e, brouillard qui efface les rep\u00e8res, aurores.",principes:"Un froid absolu o\u00f9 le blanc efface les rep\u00e8res \u2014 la survie s'y joue autant sur l'orientation que sur le gel.",meca:"L'Apex dispara\u00eet dans le blizzard (typage Spectre), for\u00e7ant \u00e0 anticiper sa r\u00e9apparition.",faune:"Esp\u00e8ces adapt\u00e9es au gel, certaines bioluminescentes. Naglagla (fossile Galar) parmi d'autres lign\u00e9es."},
+        {name:"Cosmique",meteo:"\u2b50 Radiations X",types:[["purple","Cosmique"],["purple","Psy"]],color:"purple",visuel:"Crat\u00e8re r\u00e9siduel, roche vitrifi\u00e9e, aurore anormale violette et verte. Silence quasi total.",principes:"Seul biome o\u00f9 le Marqueur X est perceptible. Le Psy de l'Apex annonce le Deoxys moderne (Cosmique perdu).",meca:"Perturbe les m\u00e9caniques standards. Se rouvre en post-game pour la rencontre avec Deoxys \u2014 double usage narratif.",faune:"Peu d'esp\u00e8ces, discr\u00e8tes, l\u00e9g\u00e8res mutations li\u00e9es aux radiations X \u2014 raret\u00e9 plut\u00f4t que densit\u00e9."}
       ]},
-      {type:"mechanic",title:"Volcan \u2014 le seuil de Groudon",icon:"\u25c6",text:"C'est ici, et seulement ici, que l'imagerie min\u00e9rale et volcanique pure a sa place \u2014 celle qu'on a d\u00e9lib\u00e9r\u00e9ment retir\u00e9e de l'\u00c9quatorial. Typhlosion de Pang\u00e9e y trouve son foyer narratif : sentinelle du seuil de Groudon, visible et approchable d\u00e8s la premi\u00e8re visite. Terrain hostile (d\u00e9g\u00e2ts passifs de chaleur). Quasi st\u00e9rile \u2014 seules quelques esp\u00e8ces Feu/Roche extr\u00eamophiles survivent aux abords de la caldeira."},
-      {type:"mechanic",title:"Haute-Mer \u2014 l'immersion totale",icon:"\u25c8",text:"\u00c0 distinguer nettement du C\u00f4tier : ici pas de friction terre/mer, seulement l'immersion totale dans Panthalassa. Navigation et plong\u00e9e en profondeur comme mode de d\u00e9placement. Cr\u00e9atures abyssales adapt\u00e9es \u00e0 l'obscurit\u00e9 totale et \u00e0 la pression des grands fonds \u2014 un oc\u00e9an ouvert, sans rep\u00e8re, sans rivage \u00e0 des kilom\u00e8tres."},
-      {type:"mechanic",title:"Pilier C\u00e9leste \u2014 le sommet unique",icon:"\u25c7",text:"Seul point culminant de toute la Pang\u00e9e \u2014 le lieu o\u00f9 Rayquaza arbitre depuis toujours, au-dessus du conflit permanent entre la terre et la mer. L'altitude est une contrainte de gameplay (acc\u00e8s progressif, oxyg\u00e8ne et vent comme obstacles). Uniquement des esp\u00e8ces volantes adapt\u00e9es \u00e0 l'altitude extr\u00eame, jamais crois\u00e9es ailleurs dans le jeu."}
+      {type:"divider"},
+      {type:"h2",text:"Zones l\u00e9gendaires \u2014 accessibles t\u00f4t, capturables tard"},
+      {type:"para",text:"Trois territoires des gardiens primordiaux, hors de la logique des cinq biomes Apex. Explorables d\u00e8s le jeu principal \u2014 le joueur y affronte la faune et croise les gardiens \u2014 mais Groudon Primo, Kyogre Primo et Mega Rayquaza ne deviennent **capturables qu'en post-game**."},
+      {type:"zone-grid",items:[
+        {name:"Volcan",meteo:"\ud83c\udf0b S\u00e9cheresse totale",types:[["coral","Feu"],["amber","Sol"]],tag:"Groudon Primo",color:"coral",visuel:"Caldeira active, coul\u00e9es de lave permanentes, air qui tremble en mirage. L'imagerie min\u00e9rale pure, retir\u00e9e de l'\u00c9quatorial.",principes:"Foyer narratif de Typhlosion de Pang\u00e9e \u2014 sentinelle du seuil de Groudon, approchable d\u00e8s la premi\u00e8re visite.",meca:"Terrain hostile (d\u00e9g\u00e2ts passifs de chaleur). Capture de Groudon Primo en post-game uniquement.",faune:"Quasi st\u00e9rile \u2014 quelques esp\u00e8ces Feu/Roche extr\u00eamophiles aux abords de la caldeira."},
+        {name:"Haute-Mer",meteo:"\ud83c\udf0a D\u00e9luge",types:[["blue","Eau"]],tag:"Kyogre Primo",color:"blue",visuel:"Oc\u00e9an sans fond, aucune terre \u00e0 l'horizon, temp\u00eates perp\u00e9tuelles. L'immersion totale dans Panthalassa.",principes:"\u00c0 distinguer nettement du C\u00f4tier : pas de friction terre/mer, seulement l'eau \u00e0 l'\u00e9tat pur.",meca:"Navigation et plong\u00e9e en profondeur. Capture de Kyogre Primo en post-game, sans ancrage terrestre.",faune:"Cr\u00e9atures abyssales adapt\u00e9es \u00e0 l'obscurit\u00e9 et \u00e0 la pression \u2014 un oc\u00e9an ouvert sans rep\u00e8re."},
+        {name:"Pilier C\u00e9leste",meteo:"\ud83d\udca8 Courant d'altitude",types:[["teal","Dragon"],["gray","Vol"]],tag:"Mega Rayquaza",color:"teal",visuel:"Proto-montagne per\u00e7ant les nuages, vents extr\u00eames, vue quasi stratosph\u00e9rique. Seul point culminant de la Pang\u00e9e.",principes:"Le lieu o\u00f9 Rayquaza arbitre depuis toujours, au-dessus du conflit permanent entre terre et mer.",meca:"L'altitude est une contrainte de gameplay (acc\u00e8s progressif). Capture de Mega Rayquaza en post-game.",faune:"Uniquement des esp\u00e8ces volantes adapt\u00e9es \u00e0 l'altitude extr\u00eame, jamais crois\u00e9es ailleurs."}
+      ]}
     ]},
     // ===== POK\u00c9MON =====
     {id:"legendaires",label:"L\u00e9gendaires",group:"Pok\u00e9mon",color:"coral",badge:"L\u00e9gendaires",badgeColor:"coral",title:"L\u00e9gendaires & Fabuleux",meta:"Les six entit\u00e9s qui d\u00e9finissent le monde primordial",summary:"Groudon, Kyogre, Rayquaza \u2014 le trio fondateur. Deoxys \u2014 l'intrus. Arceus et Regigigas \u2014 la r\u00e9ponse.",content:[
