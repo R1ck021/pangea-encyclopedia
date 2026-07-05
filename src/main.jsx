@@ -338,7 +338,7 @@ function App(){
       <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,0.3)'}}/>
       <div style={{position:'absolute',top:0,left:0,bottom:0,width:'80%',maxWidth:280,background:m.bg,borderRight:`1px solid ${m.bd}`,display:'flex',flexDirection:'column'}} onClick={e=>e.stopPropagation()}>
         <div style={{padding:'14px 16px 10px',borderBottom:`1px solid ${m.bd}`,display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0}}>
-          <div><div style={{fontSize:12,fontWeight:700,color:m.tx}}>Pok\u00e9mon Legends \u00b7 Pang\u00e9e</div><div style={{fontSize:10,color:m.txM,marginTop:1}}>Encyclop\u00e9die de conception</div></div>
+          <div><div style={{fontSize:12,fontWeight:700,color:m.tx}}>Pokémon Legends · Pangée</div><div style={{fontSize:10,color:m.txM,marginTop:1}}>Encyclopédie de conception</div></div>
           <button onClick={()=>setMenuOpen(false)} style={{background:m.bgS,border:`1px solid ${m.bd}`,borderRadius:6,fontSize:13,cursor:'pointer',color:m.txS,padding:'3px 8px',lineHeight:1.4}}>&#10005;</button>
         </div>
         <Nav/>
@@ -356,7 +356,7 @@ function App(){
 
   return<div style={{position:'fixed',inset:0,display:'flex',fontFamily:'system-ui,-apple-system,sans-serif',color:m.tx,background:m.bg}}>
     <div style={{width:210,flexShrink:0,borderRight:`1px solid ${m.bd}`,background:m.bgS,display:'flex',flexDirection:'column',height:'100%'}}>
-      <div style={{padding:'16px 14px 12px',borderBottom:`1px solid ${m.bd}`,flexShrink:0}}><div style={{fontSize:12,fontWeight:700,color:m.tx,lineHeight:1.3}}>Pok\u00e9mon Legends</div><div style={{fontSize:10,color:m.txM,marginTop:2}}>Pang\u00e9e \u00b7 Encyclop\u00e9die</div></div>
+      <div style={{padding:'16px 14px 12px',borderBottom:`1px solid ${m.bd}`,flexShrink:0}}><div style={{fontSize:12,fontWeight:700,color:m.tx,lineHeight:1.3}}>Pokémon Legends</div><div style={{fontSize:10,color:m.txM,marginTop:2}}>Pangée · Encyclopédie</div></div>
       <Nav/>
       <div style={{padding:'10px 10px 14px',borderTop:`1px solid ${m.bd}`,flexShrink:0}}><span style={{fontSize:9.5,color:m.txM}}>{data.meta.version} \u00b7 {data.meta.lastUpdated}</span></div>
     </div>
